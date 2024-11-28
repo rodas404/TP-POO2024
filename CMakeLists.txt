@@ -3,4 +3,8 @@ project(projeto)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(projeto main.cpp)
+add_executable(projeto main.cpp
+        Buffer/Buffer.cpp
+        Buffer/Buffer.h
+        Buffer/Cursor.cpp
+        Buffer/Cursor.h)
