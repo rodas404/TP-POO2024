@@ -1,0 +1,3 @@
+"D:\clion\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\TP-POO2024.dir/objects.a
+"D:\clion\CLion 2023.3.4\bin\mingw\bin\ar.exe" qc CMakeFiles\TP-POO2024.dir/objects.a @CMakeFiles\TP-POO2024.dir\objects1.rsp
+"D:\clion\CLion 2023.3.4\bin\mingw\bin\g++.exe" -g -Wl,--whole-archive CMakeFiles\TP-POO2024.dir/objects.a -Wl,--no-whole-archive -o TP-POO2024.exe -Wl,--out-implib,libTP-POO2024.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\TP-POO2024.dir\linkLibs.rsp
