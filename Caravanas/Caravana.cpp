@@ -12,7 +12,7 @@ void Caravana::setId(int novo_id) {
 Caravana::Caravana()
 : id(next_id++), quantAtualTripulantes(0), quantMaxTripulantes(0),
 pesoMaxMercadoria(0), pesoAtualMercadoria(0), quantMaxAgua(0),
-quantAtualAgua(0), posX(0), posY(0), isInCity(false) {}
+quantAtualAgua(0), isInCity(false) {}
 
 
 // Define as propriedades das caravanas derivadas
@@ -96,13 +96,7 @@ int Caravana::getMercadoria() const {
 	return pesoAtualMercadoria;
 }
 
-int Caravana::getPosX() const {
-	return posX;
-}
 
-int Caravana::getPosY() const {
-	return posY;
-}
 void Caravana::consumeAgua() {
 	// Implementação padrão vazia
 }

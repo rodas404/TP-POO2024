@@ -32,8 +32,7 @@ protected:
 	double pesoAtualMercadoria;
 	double quantMaxAgua;
 	double quantAtualAgua;
-	int posX;
-	int posY;
+
 	bool isInCity;
 	// Cidade* cidadeAtual; // Comentado como no original
 };
