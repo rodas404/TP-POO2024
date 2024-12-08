@@ -1,3 +1,0 @@
-/home/rodrigo/Documentos/POO/TP-POO/cmake-build-debug/CMakeFiles/projeto.dir
-/home/rodrigo/Documentos/POO/TP-POO/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/rodrigo/Documentos/POO/TP-POO/cmake-build-debug/CMakeFiles/rebuild_cache.dir
