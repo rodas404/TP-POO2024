@@ -4,23 +4,43 @@
 
 #ifndef CARAVANA_H
 #define CARAVANA_H
-#include <set>
 
+class Mapa;
 
 class Caravana {
 public:
-    Caravana(char id_);
-    char getId() const;
+    Caravana(char id_, int t, float carga, int agua, bool comportamento, int m);
     Caravana &operator=(const Caravana &outro);
     Caravana(const Caravana &outro);
+    virtual Caravana* duplica() const = 0;
+    virtual ~Caravana() = default;
+
+    char getId() const;
+    int getTripulantes() const;
+    float getMercadorias() const;
+    float getMaxMerc() const;
+    int getAgua() const;
+    bool getComportamento() const;
+    int getMoedas() const;
+
+    void setTripulantes(int p);
+    void setMercadorias(float t);
+    void setAgua(int l);
+    void setComportamento(bool c);
+    void setMoedas(int m);
+
+    virtual void move(Mapa* mapa) = 0;
+
+
 private:
     char id;
-    // int quantAtualTripulantes;
-    // int quantMaxTripulantes;
-    // float pesoMaxMercadoria;
-    // float pesoAtualMercadoria;
-    // float quantMaxAgua;
-    // float quantAtualAgua;
+    int moedas;
+    int nTripulantes;
+    float pMercadorias;
+    float maxMercadorias;
+    int qAgua;
+    int maxAgua;
+    bool compAleatorio;
 
     static char generateUniqueId(char preferredId);
 };

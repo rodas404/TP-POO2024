@@ -11,10 +11,14 @@ class Mapa {
 public:
     Mapa(int numRow, int numCols);
     ~Mapa();
-    const Buffer& getBuffer() const;
-    static Mapa readFile(const string &fileName);
     Mapa &operator=(const Mapa &outro);
 
+    const Buffer& getBuffer() const;
+    int getRows() const;
+    int getCols() const;
+    Celula** getMapa() const;
+
+    static Mapa readFile(const string &fileName);
     void move(int x, int y, int dx, int dy);
 
 private:

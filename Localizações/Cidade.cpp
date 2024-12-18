@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include "Cidade.h"
 
-std::set<char> Cidade::usedIds;
+
 
 Cidade::Cidade(char id_, int pv, int pc, int pcav): id(generateUniqueId(id_)), prVenda(pv), prCompra(pc), prCaravana(pcav) {
 
@@ -17,7 +17,8 @@ char Cidade::getId() const {
 }
 
 
-char Cidade::generateUniqueId(char preferredId) {
+char Cidade::generateUniqueId(const char preferredId) {
+    std::set<char> usedIds;
     if (preferredId != '\0' && !usedIds.contains(preferredId)) {
         usedIds.insert(preferredId);
         return preferredId;

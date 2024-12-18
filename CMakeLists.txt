@@ -17,4 +17,9 @@ add_executable(projeto main.cpp
         Localizações/Item.cpp
         Localizações/Item.h
         Localizações/Caravana.cpp
-        Localizações/Caravana.h)
+        Localizações/Caravana.h
+        Caravanas/CaravanaComercio.cpp
+        Caravanas/CaravanaComercio.h
+        Caravanas/CaravanaMilitar.cpp
+        Caravanas/CaravanaMilitar.h
+)

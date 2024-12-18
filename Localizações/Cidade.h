@@ -20,7 +20,6 @@ private:
     int prCaravana;
     std::vector <Caravana*> caravanas_;
 
-    static std::set<char> usedIds;
     static char generateUniqueId(char preferredId);
 };
 

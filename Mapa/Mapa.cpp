@@ -9,6 +9,8 @@
 #include <vector>
 #include "Mapa.h"
 
+#include "../Caravanas/CaravanaComercio.h"
+
 Mapa::Mapa(int numRows, int numCols): nRows(numRows), nCols(numCols), buffer_(numRows,numCols) {
     mapa = new Celula *[nRows];
     for (int i=0; i<nRows; i++) {
@@ -94,13 +96,11 @@ Mapa Mapa::readFile(const string &fileName) {
             }
             else if (ch >= 'a' && ch <= 'z') {
                 Cidade* cidade = new Cidade(ch, details[4], details[5], details[6]);
-                mapa.mapa[i][j].setTipo(Localizacoes::Cidade);
                 mapa.mapa[i][j].setCelula(cidade);
                 mapa.buffer_ << cidade;
             }
             else if (ch >= '0' && ch <= '9' || ch == '!') {
-                Caravana* caravana = new Caravana(ch);
-                mapa.mapa[i][j].setTipo(Localizacoes::Caravana);
+                Caravana* caravana = new CaravanaComercio(ch, details[0]);
                 mapa.mapa[i][j].setCelula(caravana);
                 mapa.buffer_ << caravana;
             }
@@ -149,3 +149,16 @@ void Mapa::move(int x, int y, int dx, int dy) {
         }
 
 }
+
+int Mapa::getRows() const {
+    return nRows;
+}
+
+int Mapa::getCols() const {
+    return nCols;
+}
+
+Celula **Mapa::getMapa() const {
+    return mapa;
+}
+

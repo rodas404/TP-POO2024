@@ -45,12 +45,13 @@ Localizacoes Celula::getTipo() const {
 }
 
 Celula& Celula::operator=(const Celula &other) {
-    if (this == &other) {
+    if (this == &other)
         return *this;
-    }
+
     tipo = other.tipo;
-
-
+    cidade_ = other.cidade_;
+    caravana_ = other.caravana_;
+    item_ = other.item_;
 
     return *this;
 }
