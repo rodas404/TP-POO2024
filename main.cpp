@@ -1,18 +1,11 @@
 #include <iostream>
-#include "Buffer/Buffer.h"
-#include "Caravanas/Caravana.h"
+#include "Mapa/Mapa.h"
+
 using namespace std;
 
-
-
 int main() {
-
-
-	Buffer b(10, 10);
-
-    cout <<b;
+    Mapa m = Mapa::readFile("configs.txt");
+    m.move(3,3,2,10);
+    cout << m;
     return 0;
-
-
-
 }

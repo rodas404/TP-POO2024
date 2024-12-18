@@ -1,0 +1,21 @@
+# ninja log v6
+2	593	1734479671997142048	CMakeFiles/projeto.dir/main.cpp.o	96c6e7a1da21cdc7
+2	541	1734479671997142048	CMakeFiles/projeto.dir/Buffer/Buffer.cpp.o	67c492665ad1f880
+3	572	1734479671998142045	CMakeFiles/projeto.dir/Mapa/Celula.cpp.o	a1432bdddc45a700
+682	738	1734480464656374865	projeto	89cff37e4f7bcf4a
+2	682	1734480463976377241	CMakeFiles/projeto.dir/Mapa/Mapa.cpp.o	1dc8bc069aea8414
+4	113	1734026377416437983	CMakeFiles/projeto.dir/Localizações/Item.cpp.o	1be019f924f8b5e
+3	534	1734026377415437669	CMakeFiles/projeto.dir/Buffer/Cursor.cpp.o	bed312492d0d1342
+3	464	1734479671998142045	CMakeFiles/projeto.dir/Localizações/Cidade.cpp.o	50c54b50c289f1f1
+2	418	1734480382897660530	CMakeFiles/projeto.dir/Localizações/Caravana.cpp.o	563e15d58fbadba5
+2	530	1734480489727287242	CMakeFiles/projeto.dir/main.cpp.o	96c6e7a1da21cdc7
+530	585	1734480490255285397	projeto	89cff37e4f7bcf4a
+2	537	1734480585379952927	CMakeFiles/projeto.dir/main.cpp.o	96c6e7a1da21cdc7
+3	694	1734480585380952924	CMakeFiles/projeto.dir/Mapa/Mapa.cpp.o	1dc8bc069aea8414
+694	749	1734480586071950509	projeto	89cff37e4f7bcf4a
+1	518	1734480628980800542	CMakeFiles/projeto.dir/main.cpp.o	96c6e7a1da21cdc7
+518	576	1734480629496798739	projeto	89cff37e4f7bcf4a
+1	497	1734480841119058988	CMakeFiles/projeto.dir/Buffer/Buffer.cpp.o	67c492665ad1f880
+1	544	1734480841119058988	CMakeFiles/projeto.dir/main.cpp.o	96c6e7a1da21cdc7
+2	700	1734480841120058984	CMakeFiles/projeto.dir/Mapa/Mapa.cpp.o	1dc8bc069aea8414
+700	758	1734480841819056540	projeto	89cff37e4f7bcf4a
