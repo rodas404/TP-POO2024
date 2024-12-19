@@ -28,6 +28,9 @@ public:
     void setCelula(Caravana *car);
 
     Caravana* getCaravana() const;
+    Cidade* getCidade() const;
+    Item* getItem() const;
+
     void resetCaravana();
     void setTipo(Localizacoes l);
     Localizacoes getTipo() const;

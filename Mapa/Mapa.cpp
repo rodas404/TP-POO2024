@@ -137,8 +137,23 @@ Mapa& Mapa::operator=(const Mapa& outro) {
 }
 
 void Mapa::move(int x, int y, int dx, int dy) {
+    if (dy>= nCols)
+        dy = 0;
+    else if (dy < 0)
+        dy = nCols - 1;
+
+    if (dx >= nRows)
+        dx = 0;
+
+    else if (dx < 0)
+        dx = nRows - 1;
+
     if (mapa[dx][dy].getTipo() == Localizacoes::Cidade) {
         cout << "movi para cidade";
+        mapa[dx][dy].getCidade()->chegou_caravana(mapa[x][y].getCaravana());
+        mapa[x][y].resetCaravana();
+        mapa[x][y].setCelula();
+        buffer_(x,y) << '.';
     }
     else if (mapa[x][y].getTipo() == Localizacoes::Caravana){
         mapa[dx][dy].setCelula(mapa[x][y].getCaravana());

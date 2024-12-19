@@ -13,7 +13,8 @@ public:
 
     CaravanaComercio* duplica() const override;
 
-    void move(Mapa *mapa) override;
+    void move(Mapa *mapa, std::string &direction) override;
+    std::string getInfo() const override;
 };
 
 

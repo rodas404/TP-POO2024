@@ -22,4 +22,14 @@ add_executable(projeto main.cpp
         Caravanas/CaravanaComercio.h
         Caravanas/CaravanaMilitar.cpp
         Caravanas/CaravanaMilitar.h
+        Itens/CaixaPandora.cpp
+        Itens/CaixaPandora.h
+        Itens/ArcaTesouro.cpp
+        Itens/ArcaTesouro.h
+        Itens/Jaula.cpp
+        Itens/Jaula.h
+        Itens/Mina.cpp
+        Itens/Mina.h
+        Itens/PacoteSuspenso.cpp
+        Itens/PacoteSuspenso.h
 )

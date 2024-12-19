@@ -109,6 +109,36 @@ build CMakeFiles/projeto.dir/Caravanas/CaravanaMilitar.cpp.o: CXX_COMPILER__proj
   OBJECT_DIR = CMakeFiles/projeto.dir
   OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Caravanas
 
+build CMakeFiles/projeto.dir/Itens/CaixaPandora.cpp.o: CXX_COMPILER__projeto_unscanned_Debug /home/rodrigo/Documentos/POO/TP-POO/Itens/CaixaPandora.cpp || cmake_object_order_depends_target_projeto
+  DEP_FILE = CMakeFiles/projeto.dir/Itens/CaixaPandora.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/projeto.dir
+  OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Itens
+
+build CMakeFiles/projeto.dir/Itens/ArcaTesouro.cpp.o: CXX_COMPILER__projeto_unscanned_Debug /home/rodrigo/Documentos/POO/TP-POO/Itens/ArcaTesouro.cpp || cmake_object_order_depends_target_projeto
+  DEP_FILE = CMakeFiles/projeto.dir/Itens/ArcaTesouro.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/projeto.dir
+  OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Itens
+
+build CMakeFiles/projeto.dir/Itens/Jaula.cpp.o: CXX_COMPILER__projeto_unscanned_Debug /home/rodrigo/Documentos/POO/TP-POO/Itens/Jaula.cpp || cmake_object_order_depends_target_projeto
+  DEP_FILE = CMakeFiles/projeto.dir/Itens/Jaula.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/projeto.dir
+  OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Itens
+
+build CMakeFiles/projeto.dir/Itens/Mina.cpp.o: CXX_COMPILER__projeto_unscanned_Debug /home/rodrigo/Documentos/POO/TP-POO/Itens/Mina.cpp || cmake_object_order_depends_target_projeto
+  DEP_FILE = CMakeFiles/projeto.dir/Itens/Mina.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/projeto.dir
+  OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Itens
+
+build CMakeFiles/projeto.dir/Itens/PacoteSuspenso.cpp.o: CXX_COMPILER__projeto_unscanned_Debug /home/rodrigo/Documentos/POO/TP-POO/Itens/PacoteSuspenso.cpp || cmake_object_order_depends_target_projeto
+  DEP_FILE = CMakeFiles/projeto.dir/Itens/PacoteSuspenso.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/projeto.dir
+  OBJECT_FILE_DIR = CMakeFiles/projeto.dir/Itens
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target projeto
@@ -117,7 +147,7 @@ build CMakeFiles/projeto.dir/Caravanas/CaravanaMilitar.cpp.o: CXX_COMPILER__proj
 #############################################
 # Link the executable projeto
 
-build projeto: CXX_EXECUTABLE_LINKER__projeto_Debug CMakeFiles/projeto.dir/main.cpp.o CMakeFiles/projeto.dir/Buffer/Buffer.cpp.o CMakeFiles/projeto.dir/Buffer/Cursor.cpp.o CMakeFiles/projeto.dir/Mapa/Mapa.cpp.o CMakeFiles/projeto.dir/Mapa/Celula.cpp.o CMakeFiles/projeto.dir/Localizações/Cidade.cpp.o CMakeFiles/projeto.dir/Localizações/Item.cpp.o CMakeFiles/projeto.dir/Localizações/Caravana.cpp.o CMakeFiles/projeto.dir/Caravanas/CaravanaComercio.cpp.o CMakeFiles/projeto.dir/Caravanas/CaravanaMilitar.cpp.o
+build projeto: CXX_EXECUTABLE_LINKER__projeto_Debug CMakeFiles/projeto.dir/main.cpp.o CMakeFiles/projeto.dir/Buffer/Buffer.cpp.o CMakeFiles/projeto.dir/Buffer/Cursor.cpp.o CMakeFiles/projeto.dir/Mapa/Mapa.cpp.o CMakeFiles/projeto.dir/Mapa/Celula.cpp.o CMakeFiles/projeto.dir/Localizações/Cidade.cpp.o CMakeFiles/projeto.dir/Localizações/Item.cpp.o CMakeFiles/projeto.dir/Localizações/Caravana.cpp.o CMakeFiles/projeto.dir/Caravanas/CaravanaComercio.cpp.o CMakeFiles/projeto.dir/Caravanas/CaravanaMilitar.cpp.o CMakeFiles/projeto.dir/Itens/CaixaPandora.cpp.o CMakeFiles/projeto.dir/Itens/ArcaTesouro.cpp.o CMakeFiles/projeto.dir/Itens/Jaula.cpp.o CMakeFiles/projeto.dir/Itens/Mina.cpp.o CMakeFiles/projeto.dir/Itens/PacoteSuspenso.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/projeto.dir
   POST_BUILD = :
