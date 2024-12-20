@@ -24,19 +24,19 @@ void CaravanaMilitar::move(Mapa *mapa, string &direction) {
 
 
 void CaravanaMilitar::move(Mapa *mapa) {
-    auto[col, row] = this->getCoordenadas(mapa);
-    int targetCol = col, targetRow = row;
+    auto[row, col] = this->getCoordenadas(mapa);
+    int targetRow = row, targetCol = col;
     bool found = false;
 
     for (int i = -6; i <= 6; ++i) {
         for (int j = -6; j <= 6; ++j) {
-            int newCol = (col + i + mapa->getCols()) % mapa->getCols();
-            int newRow = (row + j + mapa->getRows()) % mapa->getRows();
+            int newRow = (row + i + mapa->getRows()) % mapa->getRows();
+            int newCol = (col + j + mapa->getCols()) % mapa->getCols();
 
             Caravana *caravana = mapa->getMapa()[newRow][newCol].getCaravana();
             if (caravana && caravana->getTipo() == Tipos::Barbara) {
-                targetCol = newCol;
                 targetRow = newRow;
+                targetCol = newCol;
                 found = true;
                 break;
             }
@@ -44,11 +44,10 @@ void CaravanaMilitar::move(Mapa *mapa) {
         if (found) break;
     }
 
-    if (targetRow != row && targetCol != col)
+    if (targetRow != row || targetCol != col)
         consomeAgua();
 
-    //fazer verificações
-    mapa->move(this, targetCol, targetRow);
+    mapa->move(this, targetRow, targetCol);
 }
 
 std::string CaravanaMilitar::getInfo() const {
@@ -75,8 +74,8 @@ void CaravanaMilitar::consomeAgua() {
 void CaravanaMilitar::lastMoves(Mapa *mapa) {
     static std::string lastDirection = "right"; // Default initial direction
 
-    auto [col, row] = this->getCoordenadas(mapa);
-    int newCol = col, newRow = row;
+    auto[row, col] = this->getCoordenadas(mapa);
+    int newRow = row, newCol = col;
 
     if (lastDirection == "right") {
         newCol = (col + 1 + mapa->getCols()) % mapa->getCols();
@@ -90,9 +89,9 @@ void CaravanaMilitar::lastMoves(Mapa *mapa) {
 
     if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
         mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-        mapa->move(this, newCol, newRow);
-    }
-    this->setDeathCount(this->getDeathCount()-1);
-    // Update lastDirection if needed
-    // lastDirection = "new_direction"; // Uncomment and set new direction if needed
+            mapa->move(this, newRow, newCol);
+        }
+
+    //incompleto e sem verificações
+    this->setDeathCount(this->getDeathCount() - 1);
 }

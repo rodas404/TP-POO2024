@@ -6,6 +6,7 @@
 #include "Cidade.h"
 #include "Caravana.h"
 #include <string>
+#include "../Mapa/Mapa.h"
 #include <iostream>
 #include <sstream>
 using namespace std;
@@ -101,4 +102,18 @@ Cidade &Cidade::operator=(const Cidade &outro) {
         caravanas_.push_back(outro.caravanas_[i]->duplica());
 
     return *this;
+}
+
+
+std::pair<int, int> Cidade::getCoordenadas(const Mapa *mapa) const {
+    for (int row = 0; row < mapa->getRows(); ++row) {
+        for (int col = 0; col < mapa->getCols(); ++col) {
+            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
+                if (mapa->getMapa()[row][col].getCidade() == this) {
+                    return make_pair(row, col);
+                }
+            }
+        }
+    }
+    return make_pair(-1, -1);
 }

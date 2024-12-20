@@ -141,6 +141,23 @@ std::string Caravana::getInfo() const {
 
 }
 
+std::pair<int, int> Caravana::getCoordenadas(const Mapa *mapa) const {
+    for (int row = 0; row < mapa->getRows(); ++row) {
+        for (int col = 0; col < mapa->getCols(); ++col) {
+            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Caravana) {
+                if (mapa->getMapa()[row][col].getCaravana() == this) {
+                    return make_pair(row, col);
+                }
+            } else if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
+                if (mapa->getMapa()[row][col].getCidade()->isHere(this->getId()) != nullptr) {
+                    return make_pair(row, col);
+                }
+            }
+        }
+    }
+    return make_pair(-1, -1);
+}
+
 Caravana *Caravana::find(const Mapa *mapa, const char id) {
     for (int row = 0; row < mapa->getRows(); ++row) {
         for (int col = 0; col < mapa->getCols(); ++col) {
@@ -158,48 +175,31 @@ Caravana *Caravana::find(const Mapa *mapa, const char id) {
     return nullptr;
 }
 
-pair<int, int> Caravana::getCoordenadas(const Mapa *mapa) const {
-    for (int col = 0; col < mapa->getRows(); ++col) {
-        for (int row = 0; row < mapa->getCols(); ++row) {
-            if (mapa->getMapa()[col][row].getTipo() == Localizacoes::Caravana) {
-                if (mapa->getMapa()[col][row].getCaravana() == this) {
-                    return make_pair(col,row);
-                }
-            } else if (mapa->getMapa()[col][row].getTipo() == Localizacoes::Cidade) {
-                if (mapa->getMapa()[col][row].getCidade()->isHere(this->getId()) != nullptr) {
-                    return make_pair(col,row);
-                }
-            }
-        }
-    }
-    return make_pair(-1,-1);
-}
-
 
 void Caravana::move(Mapa *mapa, std::string &direction) {
     std::pair<int, int> coordinates = getCoordenadas(mapa);
-    int col = coordinates.first;
-    int row = coordinates.second;
+    int row = coordinates.first;
+    int col = coordinates.second;
 
     if (row == -1 && col == -1)
-        throw;
+        return;
 
     if (direction == "BE")
-        mapa->move(this, col+1, row-1);
+        mapa->move(this, row + 1, col - 1);
     else if (direction == "BD")
-        mapa->move(this, col+1, row+1);
+        mapa->move(this, row + 1, col + 1);
     else if (direction == "CE")
-        mapa->move(this, col-1, row-1);
+        mapa->move(this, row - 1, col - 1);
     else if (direction == "CD")
-        mapa->move(this, col-1, row+1);
+        mapa->move(this, row - 1, col + 1);
     else if (direction == "D")
-        mapa->move(this, col, row+1);
+        mapa->move(this, row, col+1);
     else if (direction == "E")
-        mapa->move(this, col, row-1);
+        mapa->move(this, row, col-1);
     else if (direction == "C")
-        mapa->move(this, col-1, row);
+        mapa->move(this, row-1, col);
     else if (direction == "B")
-        mapa->move(this, col+1, row);
+        mapa->move(this, row+1, col);
 }
 
 

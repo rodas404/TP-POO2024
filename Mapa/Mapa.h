@@ -19,7 +19,10 @@ public:
     Celula** getMapa() const;
 
     static Mapa readFile(const string &fileName);
-    bool move(Caravana *car, int dx, int dy);
+    bool move(Caravana *car, int drow, int dcol);
+    bool elimina(const Caravana *car);
+    void combates();
+    void combate(Caravana* carBar, Caravana* car);
 
 private:
     Celula **mapa;

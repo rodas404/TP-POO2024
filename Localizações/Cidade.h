@@ -7,7 +7,7 @@
 #include <vector>
 
 class Caravana;
-
+class Mapa;
 
 class Cidade {
 public:
@@ -19,6 +19,7 @@ public:
 
     bool chegou_caravana(const Caravana *car);
     Caravana* isHere(char id) const;
+    std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
     std::string listCaravanas() const;
     bool sai_caravana(char id);
 private:

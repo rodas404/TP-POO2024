@@ -17,20 +17,19 @@ CaravanaBarbara *CaravanaBarbara::duplica() const {
 
 
 void CaravanaBarbara::move(Mapa *mapa) {
-    auto[col, row] = this->getCoordenadas(mapa);
-    int targetCol = col, targetRow = row;
+    auto[row, col] = this->getCoordenadas(mapa);
+    int targetRow = row, targetCol = col;
     bool found = false;
 
     for (int i = -8; i <= 8; ++i) {
         for (int j = -8; j <= 8; ++j) {
-            if (i == 0 && j == 0) continue; // Skip the current position
-            int newCol = (col + i + mapa->getCols()) % mapa->getCols();
-            int newRow = (row + j + mapa->getRows()) % mapa->getRows();
+            int newRow = (row + i + mapa->getRows()) % mapa->getRows();
+            int newCol = (col + j + mapa->getCols()) % mapa->getCols();
 
             Caravana *caravana = mapa->getMapa()[newRow][newCol].getCaravana();
             if (caravana && caravana->getTipo() != Tipos::Barbara) {
-                targetCol = newCol;
                 targetRow = newRow;
+                targetCol = newCol;
                 found = true;
                 break;
             }
@@ -40,7 +39,6 @@ void CaravanaBarbara::move(Mapa *mapa) {
 
     // If a non-barbarian caravan is found, move one position towards it
     if (!found) {
-
         // Move randomly if no non-barbarian caravan is found
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -54,9 +52,9 @@ void CaravanaBarbara::move(Mapa *mapa) {
         }
     }
 
-    //fazer verificações necessarias
-    mapa->move(this, targetCol, targetRow);
-    this->setDeathCount(this->getDeathCount()-1);
+    // Perform necessary checks
+    mapa->move(this, targetRow, targetCol);
+    this->setDeathCount(this->getDeathCount() - 1);
 }
 
 void CaravanaBarbara::consomeAgua() {

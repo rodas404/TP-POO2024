@@ -23,21 +23,19 @@ void CaravanaComercio::move(Mapa *mapa,string &direction) {
     consomeAgua();
 }
 
-
 void CaravanaComercio::move(Mapa *mapa) {
-    auto[col, row] = this->getCoordenadas(mapa);
-    int targetCol = col, targetRow = row;
+    auto[row, col] = this->getCoordenadas(mapa);
+    int targetRow = row, targetCol = col;
     bool flag = false;
 
-    for (int i = -2; i<=2; ++i) {
-        for (int j = -2; j<=2; ++j) {
-            //jogar com os limites do mapa
-            int newCol = (col + i + mapa->getCols()) % mapa->getCols();
-            int newRow = (row + j + mapa->getRows()) % mapa->getRows();
+    for (int i = -2; i <= 2; ++i) {
+        for (int j = -2; j <= 2; ++j) {
+            int newRow = (row + i + mapa->getRows()) % mapa->getRows();
+            int newCol = (col + j + mapa->getCols()) % mapa->getCols();
             Caravana *caravana = mapa->getMapa()[newRow][newCol].getCaravana();
             if (caravana && caravana->getTipo() != Tipos::Barbara) {
-                targetCol = newCol;
                 targetRow = newRow;
+                targetCol = newCol;
                 flag = true;
                 break;
             }
@@ -48,11 +46,11 @@ void CaravanaComercio::move(Mapa *mapa) {
     flag = false;
     for (int i = -2; i <= 2; ++i) {
         for (int j = -2; j <= 2; ++j) {
-            int newCol = (col + i + mapa->getCols()) % mapa->getCols();
-            int newRow = (row + j + mapa->getRows()) % mapa->getRows();
+            int newRow = (row + i + mapa->getRows()) % mapa->getRows();
+            int newCol = (col + j + mapa->getCols()) % mapa->getCols();
             if (mapa->getMapa()[newRow][newCol].getItem()) {
-                targetCol = newCol;
                 targetRow = newRow;
+                targetCol = newCol;
                 flag = true;
                 break;
             }
@@ -60,33 +58,31 @@ void CaravanaComercio::move(Mapa *mapa) {
         if (flag) break;
     }
 
-    //selecionar aleatoriamente
-    if (targetCol == col && targetRow == row) {
+    if (targetRow == row && targetCol == col) {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0, 3);
 
         while (true) {
             int direction = dis(gen);
-            int newCol = col, newRow = row;
+            int newRow = row, newCol = col;
             switch (direction) {
-                case 0: newCol = (col + 1 + mapa->getCols()) % mapa->getCols(); break; // direita
-                case 1: newCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // esquerda
-                case 2: newRow = (row + 1 + mapa->getRows()) % mapa->getRows(); break; // baixo
-                case 3: newRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // cima
+                case 0: newCol = (col + 1 + mapa->getCols()) % mapa->getCols(); break;
+                case 1: newCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break;
+                case 2: newRow = (row + 1 + mapa->getRows()) % mapa->getRows(); break;
+                case 3: newRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break;
             }
             if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
                 mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-                targetCol = newCol;
                 targetRow = newRow;
+                targetCol = newCol;
                 break;
-                }
+            }
         }
     }
 
     consomeAgua();
-    //as caravanas so podem andar uma casa, precisa de verificações para não andar mais que uma casa e essa casa só pode ser deserto ou cidade. o stor não é claro acerca se as caravanas tem o mesmo alcance de perceção para caravanas e itens
-    mapa->move(this, targetCol, targetRow);
+    mapa->move(this, targetRow, targetCol);
 }
 
 
@@ -112,26 +108,26 @@ void CaravanaComercio::consomeAgua() {
 
 
 void CaravanaComercio::lastMoves(Mapa *mapa) {
-    auto [col, row] = this->getCoordenadas(mapa);
+    auto[row, col] = this->getCoordenadas(mapa);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 3);
 
     while (true) {
         int direction = dis(gen);
-        int newCol = col, newRow = row;
+        int newRow = row, newCol = col;
         switch (direction) {
-            case 0: newCol = (col + 1 + mapa->getCols()) % mapa->getCols(); break; // right
-            case 1: newCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // left
-            case 2: newRow = (row + 1 + mapa->getRows()) % mapa->getRows(); break; // down
-            case 3: newRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // up
+            case 0: newCol = (col + 1 + mapa->getCols()) % mapa->getCols(); break;
+            case 1: newCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break;
+            case 2: newRow = (row + 1 + mapa->getRows()) % mapa->getRows(); break;
+            case 3: newRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break;
         }
         if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
             mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-            mapa->move(this, newCol, newRow);
+            mapa->move(this, newRow, newCol);
             break;
-        }
+            }
     }
-    this->setDeathCount(this->getDeathCount()-1);
+    this->setDeathCount(this->getDeathCount() - 1);
 }
 

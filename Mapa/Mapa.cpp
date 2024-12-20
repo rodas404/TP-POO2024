@@ -7,6 +7,8 @@
 #include <sstream>
 #include <memory>
 #include <vector>
+#include <random>
+#include <algorithm>
 #include "Mapa.h"
 
 #include "../Caravanas/CaravanaComercio.h"
@@ -135,45 +137,41 @@ Mapa& Mapa::operator=(const Mapa& outro) {
     return *this;
 }
 
-bool Mapa::move(Caravana *car, int dcol, int drow) {
-    auto[col, row] = car->getCoordenadas(this);
-    if (col == -1 && row == -1) //nao encontrou caravana
+bool Mapa::move(Caravana *car, int drow, int dcol) {
+    auto[row, col] = car->getCoordenadas(this);
+    if (row == -1 && col == -1) // não encontrou caravana
         return false;
 
-    //corrigir as coordenadas (o mapa e circular)
-    if (drow >= nCols)
-        drow = drow % nCols;
+    // corrigir as coordenadas (o mapa é circular)
+    if (drow >= nRows)
+        drow = drow % nRows;
     else if (drow < 0)
-        drow = nCols + (drow % nCols);
+        drow = nRows + (drow % nRows);
 
-    if (dcol >= nRows)
-        dcol = dcol % nRows;
+    if (dcol >= nCols)
+        dcol = dcol % nCols;
     else if (dcol < 0)
-        dcol = nRows + (dcol % nRows);
+        dcol = nCols + (dcol % nCols);
 
-
-    if (mapa[dcol][drow].getTipo() != Localizacoes::Deserto && mapa[dcol][drow].getTipo() != Localizacoes::Cidade) //verifica primeiro se move em condições, meter função fixe para acidentes
+    if (mapa[drow][dcol].getTipo() != Localizacoes::Deserto && mapa[drow][dcol].getTipo() != Localizacoes::Cidade) // verifica primeiro se move em condições, meter função fixe para acidentes
         return false;
 
-
-    if (mapa[row][col].getTipo() == Localizacoes::Cidade) { //sai de uma cidade
+    if (mapa[row][col].getTipo() == Localizacoes::Cidade) { // sai de uma cidade
         if (mapa[row][col].getCidade()->sai_caravana(car->getId())) {
-            mapa[dcol][drow].setCelula(car);
-            buffer_(dcol, drow) << car;
+            mapa[drow][dcol].setCelula(car);
+            buffer_(drow, dcol) << car;
         }
-    }
-    else if (mapa[dcol][drow].getTipo() == Localizacoes::Cidade) { //vai para uma cidade
-        mapa[dcol][drow].getCidade()->chegou_caravana(car);
+    } else if (mapa[drow][dcol].getTipo() == Localizacoes::Cidade) { // vai para uma cidade
+        mapa[drow][dcol].getCidade()->chegou_caravana(car);
         mapa[row][col].resetCaravana();
         mapa[row][col].setCelula();
-        buffer_(row,col) << '.';
-    }
-    else if (mapa[dcol][drow].getTipo() == Localizacoes::Deserto){ // condicao geral
-        mapa[dcol][drow].setCelula(car);
+        buffer_(row, col) << '.';
+    } else if (mapa[drow][dcol].getTipo() == Localizacoes::Deserto) { // condição geral
+        mapa[drow][dcol].setCelula(car);
         mapa[row][col].resetCaravana();
         mapa[row][col].setCelula();
-        buffer_(dcol,drow) << car;
-        buffer_(row,col) << '.';
+        buffer_(drow, dcol) << car;
+        buffer_(row, col) << '.';
     }
 
     return true;
@@ -191,3 +189,64 @@ Celula **Mapa::getMapa() const {
     return mapa;
 }
 
+
+bool Mapa::elimina(const Caravana *car) {
+    auto [row,col] = car->getCoordenadas(this);
+    if (row == -1 && col == -1)
+        return false;
+
+    mapa[row][col].resetCaravana();
+    mapa[row][col].setCelula();
+    buffer_(row,col) << '.';
+
+    delete car;
+    return true;
+}
+
+void Mapa::combates() {
+    for (int row = 0; row < this->getRows(); ++row) { //percorrer mapa
+        for (int col = 0; col < this->getCols(); ++col) {
+            if (mapa[row][col].getTipo() == Localizacoes::Caravana) {
+                Caravana* carBar = mapa[row][col].getCaravana();
+                if (carBar && carBar->getTipo() == Tipos::Barbara) { //encontrou caravana barbara
+                    for (int i = -1; i<1; ++i) {
+                        for (int j=-1; j<1; ++j) { // percorrer adjacencias
+                            int newRow = (row + i + nRows) % nRows;
+                            int newCol = (col + j + nCols) % nCols;
+                            Caravana* car = mapa[newRow][newCol].getCaravana();
+                            if (car && car->getTipo() != Tipos::Barbara) //encontrou caravana do utilizador, hora do combate
+                                combate(carBar, car);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void Mapa::combate(Caravana *carBar, Caravana *car) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> disBar(0, carBar->getTripulantes());
+    std::uniform_int_distribution<> disCar(0, car->getTripulantes());
+
+    int numBar = disBar(gen);
+    int numCar = disCar(gen);
+
+    Caravana* vencedora = (numBar > numCar) ? carBar : car;
+    Caravana* perdedora = (numBar > numCar) ? car : carBar;
+    
+    int perda_vencedora = static_cast<int>(vencedora->getTripulantes() * 0.2);
+    int perda_perdedora = perda_vencedora * 2;
+
+    vencedora->setTripulantes(vencedora->getTripulantes() - perda_vencedora);
+    perdedora->setTripulantes(perdedora->getTripulantes() - perda_perdedora);
+
+    if (perdedora->getTripulantes() <= 0) {
+        vencedora->setAgua(min(vencedora->getAgua() + perdedora->getAgua(), vencedora->getMaxAgua()));
+        elimina(perdedora);
+    }
+    if (vencedora->getTripulantes() <= 0)
+        elimina(vencedora);
+}
