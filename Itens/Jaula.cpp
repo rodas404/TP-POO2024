@@ -8,15 +8,9 @@
 
 Jaula::Jaula() = default;
 
-Jaula *Jaula::duplica() const {
-    return new Jaula (*this);
-}
 
 void Jaula::action(Caravana *car) {
-    int tripulacao = car->getTripulantes();
-
-
-    car->setTripulantes(tripulacao);
+    car->setTripulantes(car->getMaxTrip());
 }
 
 

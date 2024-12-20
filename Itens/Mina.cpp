@@ -4,13 +4,12 @@
 
 #include "Mina.h"
 
+#include "../Localizações/Caravana.h"
+
 Mina::Mina() = default;
 
-Mina *Mina::duplica() const {
-    return new Mina(*this);
-}
 
 void Mina::action(Caravana *car) {
-
+    car->setDeathCount(0);
 }
 

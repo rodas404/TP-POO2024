@@ -32,4 +32,8 @@ add_executable(projeto main.cpp
         Itens/Mina.h
         Itens/PacoteSuspenso.cpp
         Itens/PacoteSuspenso.h
+        Caravanas/CaravanaBarbara.cpp
+        Caravanas/CaravanaBarbara.h
+        Simulador/Simulador.cpp
+        Simulador/Simulador.h
 )

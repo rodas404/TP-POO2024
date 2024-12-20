@@ -20,6 +20,7 @@ public:
     bool chegou_caravana(const Caravana *car);
     Caravana* isHere(char id) const;
     std::string listCaravanas() const;
+    bool sai_caravana(char id);
 private:
     char id;
     int prVenda;

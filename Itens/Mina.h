@@ -12,7 +12,6 @@ public:
     Mina();
 
     void action(Caravana *car) override;
-    Mina *duplica() const override;
 };
 
 

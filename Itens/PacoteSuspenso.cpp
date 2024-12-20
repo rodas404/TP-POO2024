@@ -8,9 +8,6 @@
 
 PacoteSuspenso::PacoteSuspenso() = default;
 
-PacoteSuspenso *PacoteSuspenso::duplica() const {
-    return new PacoteSuspenso(*this);
-}
 
 void PacoteSuspenso::action(Caravana *car) {
     car->setMercadorias(car->getMaxMerc());

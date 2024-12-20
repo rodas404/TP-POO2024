@@ -85,8 +85,7 @@ Mapa Mapa::readFile(const string &fileName) {
     // configurar mapa
     for (int i = 0; i < nRows; ++i) {
         for (int j = 0; j < nCols; ++j) {
-            char ch = gridLines[i][j];
-            if (ch == '.') {
+            if (char ch = gridLines[i][j]; ch == '.') {
                 mapa.mapa[i][j].setTipo(Localizacoes::Deserto);
                 mapa.buffer_ << '.';
             }
@@ -100,7 +99,7 @@ Mapa Mapa::readFile(const string &fileName) {
                 mapa.buffer_ << cidade;
             }
             else if (ch >= '0' && ch <= '9' || ch == '!') {
-                Caravana* caravana = new CaravanaComercio(ch, details[0]);
+                Caravana* caravana = new CaravanaComercio(ch);
                 mapa.mapa[i][j].setCelula(caravana);
                 mapa.buffer_ << caravana;
             }
@@ -136,33 +135,48 @@ Mapa& Mapa::operator=(const Mapa& outro) {
     return *this;
 }
 
-void Mapa::move(int x, int y, int dx, int dy) {
-    if (dy>= nCols)
-        dy = 0;
-    else if (dy < 0)
-        dy = nCols - 1;
+bool Mapa::move(Caravana *car, int dcol, int drow) {
+    auto[col, row] = car->getCoordenadas(this);
+    if (col == -1 && row == -1) //nao encontrou caravana
+        return false;
 
-    if (dx >= nRows)
-        dx = 0;
+    //corrigir as coordenadas (o mapa e circular)
+    if (drow >= nCols)
+        drow = drow % nCols;
+    else if (drow < 0)
+        drow = nCols + (drow % nCols);
 
-    else if (dx < 0)
-        dx = nRows - 1;
+    if (dcol >= nRows)
+        dcol = dcol % nRows;
+    else if (dcol < 0)
+        dcol = nRows + (dcol % nRows);
 
-    if (mapa[dx][dy].getTipo() == Localizacoes::Cidade) {
-        cout << "movi para cidade";
-        mapa[dx][dy].getCidade()->chegou_caravana(mapa[x][y].getCaravana());
-        mapa[x][y].resetCaravana();
-        mapa[x][y].setCelula();
-        buffer_(x,y) << '.';
-    }
-    else if (mapa[x][y].getTipo() == Localizacoes::Caravana){
-        mapa[dx][dy].setCelula(mapa[x][y].getCaravana());
-        mapa[x][y].resetCaravana();
-        mapa[x][y].setCelula();
-        buffer_(dx,dy) << mapa[dx][dy].getCaravana();
-        buffer_(x,y) << '.';
+
+    if (mapa[dcol][drow].getTipo() != Localizacoes::Deserto && mapa[dcol][drow].getTipo() != Localizacoes::Cidade) //verifica primeiro se move em condições, meter função fixe para acidentes
+        return false;
+
+
+    if (mapa[row][col].getTipo() == Localizacoes::Cidade) { //sai de uma cidade
+        if (mapa[row][col].getCidade()->sai_caravana(car->getId())) {
+            mapa[dcol][drow].setCelula(car);
+            buffer_(dcol, drow) << car;
         }
+    }
+    else if (mapa[dcol][drow].getTipo() == Localizacoes::Cidade) { //vai para uma cidade
+        mapa[dcol][drow].getCidade()->chegou_caravana(car);
+        mapa[row][col].resetCaravana();
+        mapa[row][col].setCelula();
+        buffer_(row,col) << '.';
+    }
+    else if (mapa[dcol][drow].getTipo() == Localizacoes::Deserto){ // condicao geral
+        mapa[dcol][drow].setCelula(car);
+        mapa[row][col].resetCaravana();
+        mapa[row][col].setCelula();
+        buffer_(dcol,drow) << car;
+        buffer_(row,col) << '.';
+    }
 
+    return true;
 }
 
 int Mapa::getRows() const {

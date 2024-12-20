@@ -12,7 +12,6 @@ public:
     ArcaTesouro();
 
     void action(Caravana *car) override;
-    ArcaTesouro *duplica() const override;
 };
 
 

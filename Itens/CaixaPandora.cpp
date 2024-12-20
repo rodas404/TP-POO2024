@@ -15,9 +15,6 @@ void CaixaPandora::action(Caravana *car) {
     car->setTripulantes(tripulacao);
 }
 
-CaixaPandora *CaixaPandora::duplica() const {
-    return new CaixaPandora(*this);
-}
 
 
 

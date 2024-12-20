@@ -6,6 +6,7 @@
 #include "Cidade.h"
 #include "Caravana.h"
 #include <string>
+#include <iostream>
 #include <sstream>
 using namespace std;
 
@@ -54,12 +55,34 @@ Caravana *Cidade::isHere(char id) const {
 
 string Cidade::listCaravanas() const {
     ostringstream oss;
-    oss << "Estao presentes na cidade '" << this->getId() << "' as caravanas:\n";
-    for (auto &car: caravanas_) {
-        oss << "- " << car->getId() << endl;
+    if (caravanas_.empty())
+        oss << "Nenhuma caravana presente na cidade '" << this->getId() << "'.\n";
+    else {
+        oss << "Estao presentes na cidade '" << this->getId() << "' as caravanas:\n";
+        for (auto &car: caravanas_) {
+            oss << "- ";
+            if (car->getTipo() == Tipos::Comercio) oss << "Caravana de Comercio ";
+            else if (car->getTipo() == Tipos::Barbara) oss << "Caravana Barbara ";
+            else if (car->getTipo() == Tipos::Militar) oss << "Caravana Militar ";
+
+            oss << car->getId() << endl;
+        }
     }
     return oss.str();
 }
+
+bool Cidade::sai_caravana(const char id) {
+    vector<Caravana*>::iterator it = caravanas_.begin();
+    while (it != caravanas_.end()) {
+        if ((*it)->getId() == id) {
+            caravanas_.erase(it);
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 
 Cidade &Cidade::operator=(const Cidade &outro) {
     if (this == &outro)

@@ -11,7 +11,6 @@ class CaixaPandora: public Item{
 public:
     CaixaPandora();
     void action(Caravana *car) override;
-    CaixaPandora *duplica() const override;
 };
 
 

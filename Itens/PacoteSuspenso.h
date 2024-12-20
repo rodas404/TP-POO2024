@@ -11,7 +11,6 @@ class PacoteSuspenso: public Item{
 public:
     PacoteSuspenso();
 
-    PacoteSuspenso *duplica() const override;
     void action(Caravana *car) override;
 };
 

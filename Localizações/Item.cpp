@@ -4,9 +4,8 @@
 
 #include "Item.h"
 
-int Item::lifetime = 20;
 
-Item::Item(): id('?'), timeLeft(lifetime) {
+Item::Item(int lifeTime): id('?'), timeLeft(lifeTime) {
 
 }
 
@@ -34,12 +33,6 @@ int Item::getTimeLeft() const {
 Item::Item(const Item &outro): id(outro.getId()), timeLeft(outro.timeLeft) {
 
 }
-
-int Item::setLifeTime(const int time) {
-    lifetime = time;
-    return lifetime;
-}
-
 
 char Item::getId() const {
     return id;

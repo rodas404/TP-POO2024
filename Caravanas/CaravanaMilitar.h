@@ -9,15 +9,16 @@
 
 class CaravanaMilitar: public Caravana{
 public:
-    CaravanaMilitar(char id_, int m);
+    CaravanaMilitar(char id_);
 
     CaravanaMilitar* duplica() const override;
 
     void move(Mapa *mapa, std::string &direction) override;
+    void move(Mapa *mapa) override;
+    void lastMoves(Mapa *mapa) override;
     std::string getInfo() const override;
-
 private:
-    int maxTripulantes;
+    void consomeAgua() override;
 };
 
 

@@ -10,7 +10,6 @@
 class Jaula: public Item{
 public:
     Jaula();
-    Jaula *duplica() const override;
     void action(Caravana *car) override;
 };
 
