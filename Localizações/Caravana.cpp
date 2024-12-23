@@ -17,16 +17,20 @@ Caravana::Caravana(const char id_, const int trip, const float carga, const int 
 
 }
 
-Caravana &Caravana::operator=(const Caravana &outro)  {
+Caravana &Caravana::operator=(const Caravana &outro) {
     if (this == &outro)
         return *this;
 
     id = outro.id;
     nTripulantes = outro.nTripulantes;
+    maxTripulacao = outro.maxTripulacao;
     pMercadorias = outro.pMercadorias;
     maxMercadorias = outro.maxMercadorias;
     qAgua = outro.qAgua;
+    maxAgua = outro.maxAgua;
+    deathCount = outro.deathCount;
     compAleatorio = outro.compAleatorio;
+    tipo = outro.tipo;
 
     return *this;
 }
@@ -150,8 +154,8 @@ std::string Caravana::getInfo() const {
                  "\nToneladas de Mercadoria: " << this->getMercadorias() <<
                       "\nCapacidade de Carga: " << this->getMaxMerc() <<
                          "\nLitros de Agua: " << this->getAgua() <<
-                               "\nCapacidade do Deposito: " << this->getMaxAgua() <<
-                                   "\nComportamento automatico? " << (this->getComportamento() == true ? "sim" : "nao") << endl;
+                               "\nCapacidade de Agua do Deposito: " << this->getMaxAgua() <<
+                                   "\nComportamento automatico? " << (this->getComportamento() == true ? "Sim" : "Nao") << endl;
     return oss.str();
 
 }
@@ -219,4 +223,8 @@ void Caravana::move(Mapa *mapa, std::string &direction) {
 
 
 
+std::ostream &operator<<(std::ostream &output, const Caravana &car) {
+    output << car.getInfo();
+    return output;
+}
 

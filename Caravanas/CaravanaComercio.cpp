@@ -124,8 +124,8 @@ void CaravanaComercio::lastMoves(Mapa *mapa) {
         }
         if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
             mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-            mapa->move(this, newRow, newCol);
-            break;
+                mapa->move(this, newRow, newCol);
+                break;
             }
     }
     this->setDeathCount(this->getDeathCount() - 1);

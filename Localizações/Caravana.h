@@ -77,6 +77,8 @@ private:
     virtual void consomeAgua() = 0; //função para calcular o consumo de agua de cada caravana, privada porque é para apenas consumo interno
 };
 
+std::ostream &operator<<(std::ostream &output, const Caravana &car);
+
 
 
 #endif //CARAVANA_H

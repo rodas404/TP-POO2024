@@ -16,6 +16,7 @@
 #include "../Itens/ArcaTesouro.h"
 #include "../Itens/CaixaPandora.h"
 #include "../Itens/PacoteSuspenso.h"
+#include "../Caravanas/CaravanaBarbara.h"
 
 Mapa::Mapa(int numRows, int numCols): nRows(numRows), nCols(numCols), buffer_(numRows,numCols) {
     mapa = new Celula *[nRows];
@@ -302,9 +303,7 @@ bool Mapa::elimina(const Item *item) {
 }
 
 
-void Mapa::tempestade(std::pair<int, int> centro, int r) const {
-    int row = centro.first;
-    int col = centro.second;
+void Mapa::tempestade(const int row, const int col, const int r) const {
 
     for (int i = -r; i <= r; ++i) {
         for (int j = -r; j <= r; ++j) {
@@ -312,10 +311,20 @@ void Mapa::tempestade(std::pair<int, int> centro, int r) const {
             int newCol = (col + j + nCols) % nCols;
 
             if (mapa[newRow][newCol].getTipo() == Localizacoes::Caravana) {
-                Caravana* caravana = mapa[newRow][newCol].getCaravana();
-                if (caravana)
+                if (Caravana* caravana = mapa[newRow][newCol].getCaravana())
                     caravana->efeitoTempestade();
             }
         }
     }
+}
+
+
+bool Mapa::spawnBarbaro(const int row, const int col) {
+    if (mapa[row][col].getTipo() != Localizacoes::Deserto)
+        return false;
+
+    Caravana* barbaro = new CaravanaBarbara();
+    mapa[row][col].setCelula(barbaro);
+    buffer_(row, col) << barbaro;
+    return true;
 }

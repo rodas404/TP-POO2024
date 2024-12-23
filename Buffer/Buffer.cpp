@@ -7,7 +7,7 @@
 #include "Buffer.h"
 
 
-Buffer::Buffer(int numRows, int numCols): nRows(numRows), nCols(numCols) {
+Buffer::Buffer(const int numRows, const int numCols): nRows(numRows), nCols(numCols) {
     grid = new char *[nRows];
     for (int i=0; i< nRows; i++) {
         grid[i] = new char[nCols];
@@ -122,7 +122,7 @@ Buffer &Buffer::operator++() {
     return *this;
 }
 
-Buffer &Buffer::operator()(int row, int col) {
+Buffer &Buffer::operator()(const int row, const int col) {
     moveCursor(row, col);
     return *this;
 }

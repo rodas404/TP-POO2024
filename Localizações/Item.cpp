@@ -6,7 +6,7 @@
 using namespace std;
 std::set<int> Item::usedIds;
 
-Item::Item(int lifeTime): id(manageIds()), timeLeft(lifeTime) {
+Item::Item(const int lifeTime): id(manageIds()), timeLeft(lifeTime) {
     usedIds.insert(id);
 }
 

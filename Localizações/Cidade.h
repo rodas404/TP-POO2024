@@ -17,12 +17,21 @@ public:
     Cidade &operator=(const Cidade &outro);
 
     char getId() const;
+    int getPrVenda() const;
+    int getPrCompra() const;
+    int getPrCaravana() const;
 
     bool chegou_caravana(const Caravana *car);
     Caravana* isHere(char id) const;
     std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
     std::string listCaravanas() const;
+    std::string listPrecos() const;
     bool sai_caravana(char id);
+    bool vende(char id) const;
+    bool compra(char id, float t) const; //compra mercadoria
+    bool compra(char tipo); //compra caravana
+    bool compra(char id, int nt) const; //compra tripulantes
+
 private:
     char id;
     int prVenda;

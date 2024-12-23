@@ -9,7 +9,7 @@
 #include <random>
 using namespace std;
 
-CaravanaMilitar::CaravanaMilitar(char id_): Caravana(id_, 40, 5, 400, false, 7, 40, Tipos::Militar) {
+CaravanaMilitar::CaravanaMilitar(const char id_): Caravana(id_, 40, 5, 400, false, 7, 40, Tipos::Militar) {
 
 }
 

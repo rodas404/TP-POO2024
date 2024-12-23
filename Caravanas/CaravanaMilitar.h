@@ -9,7 +9,7 @@
 
 class CaravanaMilitar: public Caravana{
 public:
-    CaravanaMilitar(char id_);
+    CaravanaMilitar(char id_ = '\0');
 
     CaravanaMilitar* duplica() const override;
 

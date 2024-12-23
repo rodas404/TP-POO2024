@@ -5,7 +5,7 @@
 #include "Celula.h"
 using namespace std;
 
-Celula::Celula(Localizacoes t): tipo(t), cidade_(nullptr), caravana_(nullptr), item_(nullptr)  {
+Celula::Celula(const Localizacoes t): tipo(t), cidade_(nullptr), caravana_(nullptr), item_(nullptr)  {
 }
 
 void Celula::setCelula() {
@@ -31,7 +31,7 @@ bool Celula::checkRestricoes() const {
 }
 
 
-void Celula::setTipo(Localizacoes l) {
+void Celula::setTipo(const Localizacoes l) {
     tipo = l;
 }
 

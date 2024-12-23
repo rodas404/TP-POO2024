@@ -25,7 +25,8 @@ public:
     void combate(Caravana* carBar, Caravana* car);
     void spawnItem();
     bool elimina(const Item *item);
-    void tempestade(pair<int,int> centro, int r) const;
+    void tempestade(int row, int col, int r) const;
+    bool spawnBarbaro(int row, int col);
 
 private:
     Celula **mapa;

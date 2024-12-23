@@ -8,8 +8,7 @@ int main() {
     cout << m;
     Caravana* c = Caravana::find(&m, '1');
     string n = "C";
-    m.spawnItem();
-    cout << m;
+
 
 
 
