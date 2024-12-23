@@ -112,8 +112,8 @@ Buffer &Buffer::operator<<(const Cidade *c) {
 }
 
 
-Buffer &Buffer::operator<<(const Item *i) {
-    put(i->getId());
+Buffer &Buffer::operator<<(const Item *) {
+    put('?');
     return *this;
 }
 

@@ -131,3 +131,20 @@ void CaravanaComercio::lastMoves(Mapa *mapa) {
     this->setDeathCount(this->getDeathCount() - 1);
 }
 
+void CaravanaComercio::efeitoTempestade() {
+    float carrega = this->getMercadorias() / this->getMaxMerc();
+    float probabilidade = (carrega > 0.5) ? 0.5 : 0.25;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    if (dis(gen) < probabilidade)
+        this->setDeathCount(0);
+    else {
+        const float novoPeso = this->getMercadorias() * 0.75f;
+        this->setMercadorias(novoPeso);
+    }
+}
+
+

@@ -17,6 +17,7 @@ public:
     void move(Mapa *mapa) override;
     void lastMoves(Mapa *mapa) override;
     std::string getInfo() const override;
+    void efeitoTempestade() override;
 
 private:
     void consomeAgua() override;

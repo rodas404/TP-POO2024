@@ -32,6 +32,7 @@ public:
     Item* getItem() const;
 
     void resetCaravana();
+    void resetItem();
     void setTipo(Localizacoes l);
     Localizacoes getTipo() const;
     bool checkRestricoes() const;

@@ -12,7 +12,6 @@ class Simulador {
 public:
 
 private:
-    int moedas;
     Mapa *mapa_;
     int instantes_itens;
     int max_itens;

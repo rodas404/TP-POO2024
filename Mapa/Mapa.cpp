@@ -8,10 +8,14 @@
 #include <memory>
 #include <vector>
 #include <random>
-#include <algorithm>
 #include "Mapa.h"
 
 #include "../Caravanas/CaravanaComercio.h"
+#include "../Itens/Jaula.h"
+#include "../Itens/Mina.h"
+#include "../Itens/ArcaTesouro.h"
+#include "../Itens/CaixaPandora.h"
+#include "../Itens/PacoteSuspenso.h"
 
 Mapa::Mapa(int numRows, int numCols): nRows(numRows), nCols(numCols), buffer_(numRows,numCols) {
     mapa = new Celula *[nRows];
@@ -236,7 +240,7 @@ void Mapa::combate(Caravana *carBar, Caravana *car) {
 
     Caravana* vencedora = (numBar > numCar) ? carBar : car;
     Caravana* perdedora = (numBar > numCar) ? car : carBar;
-    
+
     int perda_vencedora = static_cast<int>(vencedora->getTripulantes() * 0.2);
     int perda_perdedora = perda_vencedora * 2;
 
@@ -249,4 +253,69 @@ void Mapa::combate(Caravana *carBar, Caravana *car) {
     }
     if (vencedora->getTripulantes() <= 0)
         elimina(vencedora);
+}
+
+
+void Mapa::spawnItem() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> disRow(0, nRows - 1);
+    std::uniform_int_distribution<> disCol(0, nCols - 1);
+    std::uniform_int_distribution<> disItem(1, 5);
+
+    int row, col;
+    do {
+        row = disRow(gen);
+        col = disCol(gen);
+    } while (mapa[row][col].getTipo() != Localizacoes::Deserto);
+
+    Item* item = nullptr;
+    switch (disItem(gen)) {
+        case 1: item = new ArcaTesouro();
+                break;
+        case 2: item = new Jaula();
+                break;
+        case 3: item = new PacoteSuspenso();
+                break;
+        case 4: item = new Mina();
+                break;
+        case 5: item = new CaixaPandora();
+                break;
+    }
+
+    mapa[row][col].setCelula(item);
+    buffer_(row, col) << item;
+}
+
+bool Mapa::elimina(const Item *item) {
+    auto[row,col] = item->getCoordenadas(this);
+    if (row == -1 && col == -1)
+        return false;
+
+    mapa[row][col].resetItem();
+    mapa[row][col].setCelula();
+    buffer_(row,col) << '.';
+
+    delete item;
+    return true;
+
+}
+
+
+void Mapa::tempestade(std::pair<int, int> centro, int r) const {
+    int row = centro.first;
+    int col = centro.second;
+
+    for (int i = -r; i <= r; ++i) {
+        for (int j = -r; j <= r; ++j) {
+            int newRow = (row + i + nRows) % nRows;
+            int newCol = (col + j + nCols) % nCols;
+
+            if (mapa[newRow][newCol].getTipo() == Localizacoes::Caravana) {
+                Caravana* caravana = mapa[newRow][newCol].getCaravana();
+                if (caravana)
+                    caravana->efeitoTempestade();
+            }
+        }
+    }
 }

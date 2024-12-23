@@ -14,6 +14,7 @@ public:
     CaravanaBarbara *duplica() const override;
     void move(Mapa *mapa) override;
     void lastMoves(Mapa *mapa) override;
+    void efeitoTempestade() override;
 private:
     void consomeAgua() override;
 };

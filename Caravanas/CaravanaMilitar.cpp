@@ -6,6 +6,7 @@
 #include <string>
 #include "CaravanaMilitar.h"
 #include "../Mapa/Mapa.h"
+#include <random>
 using namespace std;
 
 CaravanaMilitar::CaravanaMilitar(char id_): Caravana(id_, 40, 5, 400, false, 7, 40, Tipos::Militar) {
@@ -94,4 +95,18 @@ void CaravanaMilitar::lastMoves(Mapa *mapa) {
 
     //incompleto e sem verificações
     this->setDeathCount(this->getDeathCount() - 1);
+}
+
+void CaravanaMilitar::efeitoTempestade() {
+    int tripulacao = this->getTripulantes();
+    int posTempestade = static_cast<int>(tripulacao * 0.9);
+    this->setTripulantes(posTempestade);
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    if (dis(gen) < 0.33)
+        this->setDeathCount(0);
+
 }

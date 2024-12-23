@@ -5,6 +5,7 @@
 #ifndef CIDADE_H
 #define CIDADE_H
 #include <vector>
+#include <string>
 
 class Caravana;
 class Mapa;

@@ -64,3 +64,22 @@ void CaravanaBarbara::consomeAgua() {
 void CaravanaBarbara::lastMoves(Mapa *mapa) {
 
 }
+
+
+void CaravanaBarbara::efeitoTempestade() {
+    int tripulacao = this->getTripulantes();
+    int posTempestade = static_cast<int>(tripulacao * 0.9);
+    this->setTripulantes(posTempestade);
+
+    if (tripulacao == 0) {
+        this->setDeathCount(0);
+        return;
+    }
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    if (dis(gen) < 0.25)
+        this->setDeathCount(0);
+}

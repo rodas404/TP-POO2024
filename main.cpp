@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "Mapa/Mapa.h"
 
 using namespace std;
@@ -9,8 +8,7 @@ int main() {
     cout << m;
     Caravana* c = Caravana::find(&m, '1');
     string n = "C";
-    c->move(&m);
-    m.elimina(c);
+    m.spawnItem();
     cout << m;
 
 

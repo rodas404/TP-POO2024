@@ -65,6 +65,11 @@ void Celula::resetCaravana() {
     caravana_ = nullptr;
 }
 
+void Celula::resetItem() {
+    item_ = nullptr;
+}
+
+
 Cidade *Celula::getCidade() const {
     return cidade_;
 }

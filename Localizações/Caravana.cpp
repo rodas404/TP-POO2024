@@ -10,6 +10,9 @@
 #include "../Mapa/Mapa.h"
 using namespace std;
 
+float Caravana::moedas = 0.0f;
+std::set<char> Caravana::usedIds;
+
 Caravana::Caravana(const char id_, const int trip, const float carga, const int agua, const bool comp, const int dc, const int maxT, const Tipos t): id(generateUniqueId(id_)), nTripulantes(trip), maxTripulacao(maxT), pMercadorias(0), maxMercadorias(carga), qAgua(agua), maxAgua(agua), deathCount(dc), compAleatorio(comp), tipo(t) {
 
 }
@@ -32,9 +35,12 @@ Caravana::Caravana(const Caravana &outro): id(outro.id), nTripulantes(outro.nTri
 
 }
 
-char Caravana::generateUniqueId(const char preferredId) {
-    static std::set<char> usedIds;
+Caravana::~Caravana() {
+    usedIds.erase(id);
+}
 
+
+char Caravana::generateUniqueId(const char preferredId) {
     if (preferredId != '\0' && !usedIds.contains(preferredId)) {
         usedIds.insert(preferredId);
         return preferredId;
@@ -82,6 +88,11 @@ float Caravana::getMercadorias() const {
     return pMercadorias;
 }
 
+float Caravana::getMoedas() {
+    return moedas;
+}
+
+
 int Caravana::getTripulantes() const {
     return nTripulantes;
 }
@@ -111,6 +122,10 @@ void Caravana::setMercadorias(float t) {
 
 void Caravana::setTripulantes(int p) {
     nTripulantes = p;
+}
+
+void Caravana::setMoedas(float m) {
+    moedas = m;
 }
 
 

@@ -10,6 +10,7 @@ ArcaTesouro::ArcaTesouro() = default;
 
 
 void ArcaTesouro::action(Caravana *car) {
-
+    float moedas = Caravana::getMoedas() * 1.1;
+    Caravana::setMoedas(moedas);
 }
 
