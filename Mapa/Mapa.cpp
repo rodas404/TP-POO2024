@@ -33,11 +33,12 @@ Mapa::~Mapa() {
 }
 
 
-
-const Buffer &Mapa::getBuffer() const {
+Buffer &Mapa::getBuffer() {
     return buffer_;
 }
-ostream &operator<<(ostream &output, const Mapa &m) {
+
+
+ostream &operator<<(ostream &output, Mapa& m) {
     output << m.getBuffer();
     return output;
 }
@@ -94,7 +95,7 @@ Mapa Mapa::readFile(const string &fileName) {
         for (int j = 0; j < nCols; ++j) {
             if (char ch = gridLines[i][j]; ch == '.') {
                 mapa.mapa[i][j].setTipo(Localizacoes::Deserto);
-                mapa.buffer_ << '.';
+                mapa.buffer_ << DESERTO_CHAR;
             }
             else if (ch == '+') {
                 mapa.mapa[i][j].setTipo(Localizacoes::Montanha);
@@ -168,19 +169,49 @@ bool Mapa::move(Caravana *car, int drow, int dcol) {
         }
     } else if (mapa[drow][dcol].getTipo() == Localizacoes::Cidade) { // vai para uma cidade
         mapa[drow][dcol].getCidade()->chegou_caravana(car);
+        car->setAgua(car->getMaxAgua());
         mapa[row][col].resetCaravana();
         mapa[row][col].setCelula();
-        buffer_(row, col) << '.';
+        buffer_(row, col) << DESERTO_CHAR;
     } else if (mapa[drow][dcol].getTipo() == Localizacoes::Deserto) { // condição geral
         mapa[drow][dcol].setCelula(car);
         mapa[row][col].resetCaravana();
         mapa[row][col].setCelula();
         buffer_(drow, dcol) << car;
-        buffer_(row, col) << '.';
+        buffer_(row, col) << DESERTO_CHAR;
+    }
+
+    //apanhar itens
+    for (int dr = -1; dr <= 1; ++dr) {
+        for (int dc = -1; dc <= 1; ++dc) {
+            int adjRow = (drow + dr + nRows) % nRows;
+            int adjCol = (dcol + dc + nCols) % nCols;
+            if (mapa[adjRow][adjCol].getItem() != nullptr) {
+                mapa[adjRow][adjCol].getItem()->action(car);
+                elimina(adjRow,adjCol);
+            }
+        }
     }
 
     return true;
 }
+
+bool Mapa::elimina(const int row, const int col) {
+    if (mapa[row][col].getItem() != nullptr) {
+        delete mapa[row][col].getItem();
+        mapa[row][col].setCelula();
+        buffer_(row,col) << DESERTO_CHAR;
+        return true;
+    }
+    if (mapa[row][col].getCaravana() != nullptr) {
+        delete mapa[row][col].getCaravana();
+        mapa[row][col].setCelula();
+        buffer_(row,col) << DESERTO_CHAR;
+        return true;
+    }
+    return false;
+}
+
 
 int Mapa::getRows() const {
     return nRows;
@@ -202,7 +233,7 @@ bool Mapa::elimina(const Caravana *car) {
 
     mapa[row][col].resetCaravana();
     mapa[row][col].setCelula();
-    buffer_(row,col) << '.';
+    buffer_(row,col) << DESERTO_CHAR;
 
     delete car;
     return true;
@@ -230,7 +261,7 @@ void Mapa::combates() {
 }
 
 
-void Mapa::combate(Caravana *carBar, Caravana *car) {
+int Mapa::combate(Caravana *carBar, Caravana *car) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> disBar(0, carBar->getTripulantes());
@@ -254,6 +285,8 @@ void Mapa::combate(Caravana *carBar, Caravana *car) {
     }
     if (vencedora->getTripulantes() <= 0)
         elimina(vencedora);
+
+    return (vencedora == car) ? 1 : 0;
 }
 
 
@@ -282,6 +315,7 @@ void Mapa::spawnItem() {
                 break;
         case 5: item = new CaixaPandora();
                 break;
+        default: return;
     }
 
     mapa[row][col].setCelula(item);
@@ -295,7 +329,7 @@ bool Mapa::elimina(const Item *item) {
 
     mapa[row][col].resetItem();
     mapa[row][col].setCelula();
-    buffer_(row,col) << '.';
+    buffer_(row,col) << DESERTO_CHAR;
 
     delete item;
     return true;
@@ -303,7 +337,9 @@ bool Mapa::elimina(const Item *item) {
 }
 
 
-void Mapa::tempestade(const int row, const int col, const int r) const {
+bool Mapa::tempestade(const int row, const int col, const int r) const {
+    if (row < 0 || row >= nRows || col < 0 || col >= nCols)
+        return false;
 
     for (int i = -r; i <= r; ++i) {
         for (int j = -r; j <= r; ++j) {
@@ -316,6 +352,8 @@ void Mapa::tempestade(const int row, const int col, const int r) const {
             }
         }
     }
+
+    return true;
 }
 
 
@@ -327,4 +365,40 @@ bool Mapa::spawnBarbaro(const int row, const int col) {
     mapa[row][col].setCelula(barbaro);
     buffer_(row, col) << barbaro;
     return true;
+}
+
+
+std::string Mapa::getDescricao(const int row, const int col) const {
+    if (row < 0 || row >= nRows || col < 0 || col >= nCols)
+        return "Coordenadas invalidas.";
+
+    ostringstream oss;
+    oss << "Coordenadas: (" << row << ", " << col << ")\n- ";
+    oss << mapa[row][col].getDescricao();
+    return oss.str();
+}
+
+
+std::string Mapa::operator()(const int row, const int col) const {
+    ostringstream oss;
+    oss << this->getDescricao(row, col);
+    return oss.str();
+}
+
+
+void Mapa::spawnBarbaro() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> disRow(0, nRows - 1);
+    std::uniform_int_distribution<> disCol(0, nCols - 1);
+
+    int row, col;
+    do {
+        row = disRow(gen);
+        col = disCol(gen);
+    } while (mapa[row][col].getTipo() != Localizacoes::Deserto);
+
+    Caravana* barbaro = new CaravanaBarbara();
+    mapa[row][col].setCelula(barbaro);
+    buffer_(row, col) << barbaro;
 }

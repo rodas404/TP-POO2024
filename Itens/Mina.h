@@ -10,7 +10,7 @@
 class Mina: public Item{
 public:
     Mina();
-
+    std::string getDescricao() const override;
     void action(Caravana *car) override;
 };
 

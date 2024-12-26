@@ -3,8 +3,10 @@
 //
 
 #include "ArcaTesouro.h"
-
+#include <sstream>
+#include <string>
 #include "../Localizações/Caravana.h"
+using namespace std;
 
 ArcaTesouro::ArcaTesouro() = default;
 
@@ -14,3 +16,11 @@ void ArcaTesouro::action(Caravana *car) {
     Caravana::setMoedas(moedas);
 }
 
+
+std::string ArcaTesouro::getDescricao() const {
+    ostringstream oss;
+    oss << "Item 'Arca do Tesouro' n " << this->getId() << " com "
+        << this->getTimeLeft() << " segundos restantes."
+            << "\nEste item acrescenta 10% as moedas do utilizador." << endl;
+    return oss.str();
+}

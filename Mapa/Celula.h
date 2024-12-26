@@ -36,6 +36,7 @@ public:
     void setTipo(Localizacoes l);
     Localizacoes getTipo() const;
     bool checkRestricoes() const;
+    std::string getDescricao() const;
 
     Celula& operator=(const Celula& other);
 private:
@@ -45,6 +46,6 @@ private:
     Item* item_;
 };
 
-
+std::ostream &operator<<(std::ostream &output, const Celula &c);
 
 #endif //CELULA_H

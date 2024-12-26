@@ -11,6 +11,7 @@ class Jaula: public Item{
 public:
     Jaula();
     void action(Caravana *car) override;
+    std::string getDescricao() const override;
 };
 
 

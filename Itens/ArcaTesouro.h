@@ -12,6 +12,7 @@ public:
     ArcaTesouro();
 
     void action(Caravana *car) override;
+    std::string getDescricao() const override;
 };
 
 

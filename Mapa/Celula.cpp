@@ -2,6 +2,7 @@
 // Created by rodrigo on 30-11-2024.
 //
 #include <iostream>
+#include <sstream>
 #include "Celula.h"
 using namespace std;
 
@@ -78,5 +79,26 @@ Item *Celula::getItem() const {
     return item_;
 }
 
+
+std::string Celula::getDescricao() const {
+    ostringstream oss;
+    if (this->getCaravana() != nullptr)
+        oss << this->getCaravana()->getInfo();
+    else if (this->getCidade() != nullptr)
+        oss << this->getCidade()->listPrecos() << this->getCidade()->listCaravanas();
+    else if (this->getItem() != nullptr)
+        oss << this->getItem()->getDescricao();
+    else if (this->getTipo() == Localizacoes::Montanha)
+        oss << "Montanha" << endl;
+    else
+        oss << "Deserto" << endl;
+
+    return oss.str();
+}
+
+
+std::ostream &operator<<(std::ostream &output, const Celula &c) {
+    return output << c.getDescricao();
+}
 
 

@@ -5,6 +5,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include <set>
+#include <string>
 
 class Mapa;
 class Caravana;
@@ -23,6 +24,7 @@ public:
     Item &operator--();
     virtual void action(Caravana *car) = 0;
     std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
+    virtual std::string getDescricao() const = 0;
 
 private:
     int id;
@@ -32,6 +34,7 @@ private:
     static int manageIds();
 };
 
+std::ostream &operator<<(std::ostream &output, const Item &item);
 
 
 #endif //ITEM_H

@@ -23,6 +23,7 @@ public:
 
     bool chegou_caravana(const Caravana *car);
     Caravana* isHere(char id) const;
+    static Cidade* find(const Mapa *mapa, char id);
     std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
     std::string listCaravanas() const;
     std::string listPrecos() const;

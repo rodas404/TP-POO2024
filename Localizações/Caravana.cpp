@@ -138,7 +138,7 @@ int Caravana::getDeathCount() const {
 }
 
 
-void Caravana::setDeathCount(int dc) {
+void Caravana::setDeathCount(const int dc) {
     deathCount = dc;
 }
 

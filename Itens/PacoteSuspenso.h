@@ -10,7 +10,7 @@
 class PacoteSuspenso: public Item{
 public:
     PacoteSuspenso();
-
+    std::string getDescricao() const override;
     void action(Caravana *car) override;
 };
 

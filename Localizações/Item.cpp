@@ -64,4 +64,8 @@ std::pair<int, int> Item::getCoordenadas(const Mapa *mapa) const {
     return make_pair(-1, -1);
 }
 
+std::ostream &operator<<(std::ostream &output, const Item &item) {
+    output << item.getDescricao();
+    return output;
+}
 

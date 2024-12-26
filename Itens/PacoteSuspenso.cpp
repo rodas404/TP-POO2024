@@ -3,8 +3,9 @@
 //
 
 #include "PacoteSuspenso.h"
-
+#include <sstream>
 #include "../Localizações/Caravana.h"
+using namespace std;
 
 PacoteSuspenso::PacoteSuspenso() = default;
 
@@ -13,4 +14,11 @@ void PacoteSuspenso::action(Caravana *car) {
     car->setMercadorias(car->getMaxMerc());
 }
 
+std::string PacoteSuspenso::getDescricao() const {
+    ostringstream oss;
+    oss << "Item 'Pacote Suspenso' n " << this->getId() << " com "
+        << this->getTimeLeft() << " segundos restantes."
+            << "\nEste item caido do ceu tem mercadorias preciosas que enchem a capacidade da caravana." << endl;
+    return oss.str();
+}
 

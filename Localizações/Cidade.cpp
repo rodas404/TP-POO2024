@@ -181,6 +181,12 @@ bool Cidade::compra(const char id, const float t) const {
 }
 
 bool Cidade::compra(const char tipo) {
+    float moedas = Caravana::getMoedas();
+    float preco = static_cast<float>(this->getPrCaravana());
+
+    if (preco > moedas)
+        return false;
+
     Caravana *car;
     if (tipo == 'C')
         car = new CaravanaComercio();
@@ -189,6 +195,7 @@ bool Cidade::compra(const char tipo) {
     else
         return false;
 
+    Caravana::setMoedas(moedas - preco);
     this->chegou_caravana(car);
     return true;
 }
@@ -207,4 +214,18 @@ bool Cidade::compra(const char id, const int nt) const {
     Caravana::setMoedas(moedas - preco);
     car->setTripulantes(min(car->getTripulantes() + nt, car->getMaxTrip()));
     return true;
+}
+
+
+Cidade *Cidade::find(const Mapa *mapa, const char id) {
+    for (int row = 0; row < mapa->getRows(); ++row) {
+        for (int col = 0; col < mapa->getCols(); ++col) {
+            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
+                if (mapa->getMapa()[row][col].getCidade()->getId() == id) {
+                    return mapa->getMapa()[row][col].getCidade();
+                }
+            }
+        }
+    }
+    return nullptr;
 }
