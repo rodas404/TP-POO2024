@@ -212,6 +212,19 @@ bool Mapa::elimina(const int row, const int col) {
     return false;
 }
 
+int Mapa::numItens() const {
+    int count = 0;
+    for (int row = 0; row < this->getRows(); ++row) { //percorrer mapa
+        for (int col = 0; col < this->getCols(); ++col) {
+            if (mapa[row][col].getTipo() == Localizacoes::Item) {
+                if (mapa[row][col].getItem() != nullptr) ++count;
+            }
+        }
+    }
+    return count;
+}
+
+
 
 int Mapa::getRows() const {
     return nRows;
@@ -240,18 +253,18 @@ bool Mapa::elimina(const Caravana *car) {
 }
 
 void Mapa::combates() {
-    for (int row = 0; row < this->getRows(); ++row) { //percorrer mapa
+    for (int row = 0; row < this->getRows(); ++row) {
         for (int col = 0; col < this->getCols(); ++col) {
             if (mapa[row][col].getTipo() == Localizacoes::Caravana) {
                 Caravana* carBar = mapa[row][col].getCaravana();
-                if (carBar && carBar->getTipo() == Tipos::Barbara) { //encontrou caravana barbara
-                    for (int i = -1; i<1; ++i) {
-                        for (int j=-1; j<1; ++j) { // percorrer adjacencias
-                            int newRow = (row + i + nRows) % nRows;
-                            int newCol = (col + j + nCols) % nCols;
-                            Caravana* car = mapa[newRow][newCol].getCaravana();
-                            if (car && car->getTipo() != Tipos::Barbara) //encontrou caravana do utilizador, hora do combate
-                                combate(carBar, car);
+                if (carBar && carBar->getTipo() == Tipos::Barbara) {
+                    int adjacencias[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+                    for (auto& dir : adjacencias) {
+                        int newRow = (row + dir[0] + nRows) % nRows;
+                        int newCol = (col + dir[1] + nCols) % nCols;
+                        Caravana* car = mapa[newRow][newCol].getCaravana();
+                        if (car && car->getTipo() != Tipos::Barbara) {
+                            combate(carBar, car);
                         }
                     }
                 }
@@ -290,7 +303,7 @@ int Mapa::combate(Caravana *carBar, Caravana *car) {
 }
 
 
-void Mapa::spawnItem() {
+void Mapa::spawnItem(const int lifetime) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> disRow(0, nRows - 1);
@@ -305,15 +318,15 @@ void Mapa::spawnItem() {
 
     Item* item = nullptr;
     switch (disItem(gen)) {
-        case 1: item = new ArcaTesouro();
+        case 1: item = new ArcaTesouro(lifetime);
                 break;
-        case 2: item = new Jaula();
+        case 2: item = new Jaula(lifetime);
                 break;
-        case 3: item = new PacoteSuspenso();
+        case 3: item = new PacoteSuspenso(lifetime);
                 break;
-        case 4: item = new Mina();
+        case 4: item = new Mina(lifetime);
                 break;
-        case 5: item = new CaixaPandora();
+        case 5: item = new CaixaPandora(lifetime);
                 break;
         default: return;
     }
@@ -357,11 +370,11 @@ bool Mapa::tempestade(const int row, const int col, const int r) const {
 }
 
 
-bool Mapa::spawnBarbaro(const int row, const int col) {
+bool Mapa::spawnBarbaro(const int row, const int col, const int lifetime) {
     if (mapa[row][col].getTipo() != Localizacoes::Deserto)
         return false;
 
-    Caravana* barbaro = new CaravanaBarbara();
+    Caravana* barbaro = new CaravanaBarbara(lifetime);
     mapa[row][col].setCelula(barbaro);
     buffer_(row, col) << barbaro;
     return true;
@@ -386,7 +399,7 @@ std::string Mapa::operator()(const int row, const int col) const {
 }
 
 
-void Mapa::spawnBarbaro() {
+void Mapa::spawnBarbaro(const int lifetime) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> disRow(0, nRows - 1);
@@ -398,7 +411,7 @@ void Mapa::spawnBarbaro() {
         col = disCol(gen);
     } while (mapa[row][col].getTipo() != Localizacoes::Deserto);
 
-    Caravana* barbaro = new CaravanaBarbara();
+    Caravana* barbaro = new CaravanaBarbara(lifetime);
     mapa[row][col].setCelula(barbaro);
     buffer_(row, col) << barbaro;
 }

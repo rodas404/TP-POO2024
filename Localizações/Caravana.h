@@ -11,13 +11,14 @@ class Mapa;
 enum class Tipos {
     Comercio,
     Militar,
-    Barbara
+    Barbara,
+    Secreta
 };
 
 class Caravana {
 public:
     //construtores
-    Caravana(char id_, int trip, float carga, int agua, bool comportamento, int dc, int maxT, Tipos t);
+    Caravana(char id_, int trip, float carga, int agua, bool comportamento, int dc, int maxT, Tipos t, int nm);
     Caravana &operator=(const Caravana &outro);
     Caravana(const Caravana &outro);
     virtual Caravana* duplica() const = 0;
@@ -35,6 +36,7 @@ public:
     int getDeathCount() const;
     Tipos getTipo() const;
     static float getMoedas();
+    int getNMoves() const;
 
     //setters
     void setTripulantes(int p);
@@ -69,6 +71,7 @@ private:
     bool compAleatorio; //true se esta a mover aleatoriamente, false se recebe instruções
     Tipos tipo; //tipo de caravana
     static float moedas; //moedas que o utilizador tem (comum a todas as caravanas)
+    int nMoves;
 
 
     static char generateUniqueId(char preferredId); //função para gerir os ids

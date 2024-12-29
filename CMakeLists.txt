@@ -36,4 +36,6 @@ add_executable(projeto main.cpp
         Caravanas/CaravanaBarbara.h
         Simulador/Simulador.cpp
         Simulador/Simulador.h
+        Caravanas/CaravanaSecreta.cpp
+        Caravanas/CaravanaSecreta.h
 )

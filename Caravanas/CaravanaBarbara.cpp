@@ -4,9 +4,11 @@
 
 #include "CaravanaBarbara.h"
 #include <random>
+#include <iostream>
 #include "../Mapa/Mapa.h"
+using namespace std;
 
-CaravanaBarbara::CaravanaBarbara(const int lifetime): Caravana('!', 40, 0, 0, true, lifetime, 50, Tipos::Barbara) {
+CaravanaBarbara::CaravanaBarbara(const int lifetime): Caravana('!', 40, 0, 0, true, lifetime, 50, Tipos::Barbara, 1) {
 
 }
 
@@ -37,19 +39,27 @@ void CaravanaBarbara::move(Mapa *mapa) {
         if (found) break;
     }
 
+    if (abs(targetRow - row) > 1) //verificar se esta a mover um espaço apenas
+        targetRow = row + (targetRow > row ? 1 : -1);
+    if (abs(targetCol - col) > 1)
+        targetCol = col + (targetCol > col ? 1 : -1);
+
     // If a non-barbarian caravan is found, move one position towards it
-    if (!found) {
-        // Move randomly if no non-barbarian caravan is found
+    if (!found || (mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Deserto &&
+                    mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Cidade)) {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dis(0, 3);
 
-        switch (dis(gen)) {
-            case 0: targetCol = (col + 1) % mapa->getCols(); break; // Right
-            case 1: targetCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // Left
-            case 2: targetRow = (row + 1) % mapa->getRows(); break; // Down
-            case 3: targetRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // Up
-        }
+        do {
+            switch (dis(gen)) {
+                case 0: targetCol = (col + 1) % mapa->getCols(); break; // Right
+                case 1: targetCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // Left
+                case 2: targetRow = (row + 1) % mapa->getRows(); break; // Down
+                case 3: targetRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // Up
+            }
+        } while (mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Deserto &&
+                 mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Cidade);
     }
 
     // Perform necessary checks

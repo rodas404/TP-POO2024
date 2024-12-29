@@ -14,7 +14,7 @@ class Item {
 public:
     virtual ~Item();
 
-    Item(int lifeTime = 20);
+    Item(int lifeTime);
     Item(const Item &outro);
     Item &operator=(const Item &outro);
 

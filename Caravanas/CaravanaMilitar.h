@@ -19,8 +19,12 @@ public:
     std::string getInfo() const override;
     void efeitoTempestade() override;
 
+    std::string getLastDirection() const;
+    void setLastDirection(const std::string &ld);
+
 private:
     void consomeAgua() override;
+    std::string lastDirection;
 };
 
 

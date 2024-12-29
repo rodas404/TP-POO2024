@@ -28,10 +28,11 @@ public:
     bool elimina(int row, int col);
     void combates();
     int combate(Caravana* carBar, Caravana* car);
-    void spawnItem();
+    void spawnItem(int lifetime = 20);
     bool tempestade(int row, int col, int r) const;
-    bool spawnBarbaro(int row, int col);
-    void spawnBarbaro();
+    bool spawnBarbaro(int row, int col, int lifetime = 60);
+    void spawnBarbaro(int lifetime = 60);
+    int numItens() const;
 
     std::string operator()(int row, int col) const;
 

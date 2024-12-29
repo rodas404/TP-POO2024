@@ -9,7 +9,7 @@
 
 class CaixaPandora: public Item{
 public:
-    CaixaPandora();
+    CaixaPandora(int lifetime = 20);
     void action(Caravana *car) override;
     std::string getDescricao() const override;
 };

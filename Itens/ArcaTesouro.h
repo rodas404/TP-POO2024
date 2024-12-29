@@ -9,7 +9,7 @@
 
 class ArcaTesouro: public Item{
 public:
-    ArcaTesouro();
+    ArcaTesouro(int lifetime = 20);
 
     void action(Caravana *car) override;
     std::string getDescricao() const override;

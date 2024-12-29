@@ -9,7 +9,7 @@
 #include <random>
 using namespace std;
 
-CaravanaMilitar::CaravanaMilitar(const char id_): Caravana(id_, 40, 5, 400, false, 7, 40, Tipos::Militar) {
+CaravanaMilitar::CaravanaMilitar(const char id_): Caravana(id_, 40, 5, 400, false, 7, 40, Tipos::Militar, 3), lastDirection("null") {
 
 }
 
@@ -19,6 +19,7 @@ CaravanaMilitar *CaravanaMilitar::duplica() const {
 
 void CaravanaMilitar::move(Mapa *mapa, string &direction) {
     Caravana::move(mapa, direction);
+    setLastDirection(direction);
     consomeAgua();
 }
 
@@ -26,6 +27,9 @@ void CaravanaMilitar::move(Mapa *mapa, string &direction) {
 
 void CaravanaMilitar::move(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
+    if (row == -1 && col == -1)
+        return;
+
     int targetRow = row, targetCol = col;
     bool found = false;
 
@@ -45,8 +49,45 @@ void CaravanaMilitar::move(Mapa *mapa) {
         if (found) break;
     }
 
-    if (targetRow != row || targetCol != col)
+    if (abs(targetRow - row) > 1) //verificar se esta a mover um espaço apenas
+        targetRow = row + (targetRow > row ? 1 : -1);
+    if (abs(targetCol - col) > 1)
+        targetCol = col + (targetCol > col ? 1 : -1);
+
+    // verifica se a celula escolhida e valida
+    if (mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Deserto &&
+        mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Cidade) {
+        // se nao for, escolhe uma outra
+        found = false;
+        for (int i = -1; i <= 1 && !found; ++i) {
+            for (int j = -1; j <= 1 && !found; ++j) {
+                int newRow = (row + i + mapa->getRows()) % mapa->getRows();
+                int newCol = (col + j + mapa->getCols()) % mapa->getCols();
+                if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
+                    mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
+                    targetRow = newRow;
+                    targetCol = newCol;
+                    found = true;
+                    }
+            }
+        }
+        if (!found) {
+            targetRow = row;
+            targetCol = col;
+        }
+        }
+
+    if (targetRow != row || targetCol != col) {
         consomeAgua();
+        if (targetRow == row && targetCol == col + 1) setLastDirection("D");
+        else if (targetRow == row && targetCol == col - 1) setLastDirection("E");
+        else if (targetRow == row - 1 && targetCol == col) setLastDirection("C");
+        else if (targetRow == row + 1 && targetCol == col) setLastDirection("B");
+        else if (targetRow == row - 1 && targetCol == col - 1) setLastDirection("CE");
+        else if (targetRow == row - 1 && targetCol == col + 1) setLastDirection("CD");
+        else if (targetRow == row + 1 && targetCol == col - 1) setLastDirection("BE");
+        else if (targetRow == row + 1 && targetCol == col + 1) setLastDirection("BD");
+    }
 
     mapa->move(this, targetRow, targetCol);
 }
@@ -63,6 +104,11 @@ void CaravanaMilitar::consomeAgua() {
     int maxTrip = this->getMaxTrip();
     int aguaConsumida;
 
+    if (this->getAgua() == 0) {
+        this->setTripulantes(tripulacao-1);
+        return;
+    }
+
     if (tripulacao >= maxTrip / 2)
         aguaConsumida = 3;
     else
@@ -73,27 +119,37 @@ void CaravanaMilitar::consomeAgua() {
 
 
 void CaravanaMilitar::lastMoves(Mapa *mapa) {
-    static std::string lastDirection = "right"; // Default initial direction
-
     auto[row, col] = this->getCoordenadas(mapa);
+    if (row == -1 && col == -1)
+        return;
+
     int newRow = row, newCol = col;
 
-    if (lastDirection == "right") {
+    string lastDirection = getLastDirection();
+
+    if (lastDirection == "D")
         newCol = (col + 1 + mapa->getCols()) % mapa->getCols();
-    } else if (lastDirection == "left") {
+    else if (lastDirection == "E")
         newCol = (col - 1 + mapa->getCols()) % mapa->getCols();
-    } else if (lastDirection == "down") {
+    else if (lastDirection == "B")
         newRow = (row + 1 + mapa->getRows()) % mapa->getRows();
-    } else if (lastDirection == "up") {
+    else if (lastDirection == "C")
         newRow = (row - 1 + mapa->getRows()) % mapa->getRows();
+    else if (lastDirection == "BE") {
+        newRow = (row + 1 + mapa->getRows()) % mapa->getRows();
+        newCol = (col - 1 + mapa->getCols()) % mapa->getCols();
+    } else if (lastDirection == "BD") {
+        newRow = (row + 1 + mapa->getRows()) % mapa->getRows();
+        newCol = (col + 1 + mapa->getCols()) % mapa->getCols();
+    } else if (lastDirection == "CE") {
+        newRow = (row - 1 + mapa->getRows()) % mapa->getRows();
+        newCol = (col - 1 + mapa->getCols()) % mapa->getCols();
+    } else if (lastDirection == "CD") {
+        newRow = (row - 1 + mapa->getRows()) % mapa->getRows();
+        newCol = (col + 1 + mapa->getCols()) % mapa->getCols();
     }
 
-    if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
-        mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-            mapa->move(this, newRow, newCol);
-        }
-
-    //incompleto e sem verificações
+    mapa->move(this, newRow, newCol);
     this->setDeathCount(this->getDeathCount() - 1);
 }
 
@@ -110,3 +166,13 @@ void CaravanaMilitar::efeitoTempestade() {
         this->setDeathCount(0);
 
 }
+
+
+std::string CaravanaMilitar::getLastDirection() const {
+    return lastDirection;
+}
+
+void CaravanaMilitar::setLastDirection(const string &ld) {
+    lastDirection = ld;
+}
+

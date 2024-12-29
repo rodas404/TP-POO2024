@@ -32,7 +32,7 @@ Buffer::~Buffer() {
 
 string Buffer::getContent() const {
     ostringstream oss;
-    oss << "Mapa atual:\n";
+    oss << "Mapa:\n";
     for (int i=0; i<nRows; i++) {
         for (int j=0; j<nCols; j++) {
             oss << grid[i][j];
@@ -160,7 +160,6 @@ Buffer::Buffer(const Buffer &outro): nRows(outro.nRows), nCols(outro.nCols) {
         for (int j = 0; j < nCols; ++j)
             grid[i][j] = outro.grid[i][j];
     }
-    esvazia();
 }
 
 

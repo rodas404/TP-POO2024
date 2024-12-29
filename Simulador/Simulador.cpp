@@ -9,6 +9,7 @@
 #include <map>
 #include <random>
 #include <array>
+#include <set>
 #include "Simulador.h"
 #include "../Mapa/Mapa.h"
 #include "../Buffer/Buffer.h"
@@ -17,12 +18,13 @@
 #include "../Caravanas/CaravanaComercio.h"
 #include "../Caravanas/CaravanaMilitar.h"
 #include "../Caravanas/CaravanaBarbara.h"
+#include "../Caravanas/CaravanaSecreta.h"
 
 using namespace std;
 
-Simulador::Simulador() : mapa_(nullptr), instantes_itens(0), lifetime_itens(0), max_itens(0), instantes_barbaros(0), barbaros_lifetime(0), running(false), turnRunning(false) {}
+Simulador::Simulador() : mapa_(nullptr), instantes_itens(0), lifetime_itens(0), max_itens(0), instantes_barbaros(0), barbaros_lifetime(0), running(false), turnRunning(false), currentInstant(0) {}
 
-Simulador::Simulador(const Simulador &outro):mapa_(outro.mapa_),instantes_itens(outro.instantes_itens), lifetime_itens(outro.lifetime_itens), max_itens(outro.max_itens), instantes_barbaros(outro.instantes_barbaros), barbaros_lifetime(outro.barbaros_lifetime), buffers(outro.buffers), running(outro.running), turnRunning(outro.turnRunning) {
+Simulador::Simulador(const Simulador &outro):mapa_(outro.mapa_),instantes_itens(outro.instantes_itens), lifetime_itens(outro.lifetime_itens), max_itens(outro.max_itens), instantes_barbaros(outro.instantes_barbaros), barbaros_lifetime(outro.barbaros_lifetime), buffers(outro.buffers), running(outro.running), turnRunning(outro.turnRunning), currentInstant(outro.currentInstant) {
 }
 Simulador &Simulador::operator=(const Simulador &outro) {
     if (this == &outro)
@@ -104,7 +106,7 @@ Simulador Simulador::readFile(const string &fileName) {
     sim.mapa_ = new Mapa(nRows, nCols);
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 1);
+    std::uniform_int_distribution<> dis(0, 2);
 
     for (int i = 0; i < nRows; ++i) {
         for (int j = 0; j < nCols; ++j) {
@@ -125,13 +127,15 @@ Simulador Simulador::readFile(const string &fileName) {
                 Caravana* caravana;
                 if (dis(gen) == 0)
                     caravana = new CaravanaComercio(ch);
-                else
+                else if (dis(gen) == 1)
                     caravana = new CaravanaMilitar(ch);
+                else
+                    caravana = new CaravanaSecreta(ch);
                 sim(i,j).setCelula(caravana);
                 sim.mapa_->getBuffer() << caravana;
             }
             else if (ch == '!') {
-                Caravana *carBar = new CaravanaBarbara(ch);
+                Caravana *carBar = new CaravanaBarbara(sim.barbaros_lifetime);
                 sim(i,j).setCelula(carBar);
                 sim.mapa_->getBuffer() << carBar;
             }
@@ -141,21 +145,73 @@ Simulador Simulador::readFile(const string &fileName) {
     return sim;
 }
 
+
+
+
 void Simulador::run() {
     setRunning(true);
     while (getRunning()) {
+        cout << getMapa();
         setTurnRunning(true);
         while (getTurnRunning()) {
             readCommand();
         }
+        resetMoves();
+        executeInstant();
+        executeTurn();
     }
 }
 
-void Simulador::readCommand() {
+void Simulador::executeTurn() {
+    if (getCurrentInstant() % getInstantesBarbaros()  == 0)
+        getMapa()->spawnBarbaro(getBarbarosLifetime());
+    if (getCurrentInstant() % getInstantesItens() == 0 && getMapa()->numItens() != getMaxItens())
+        getMapa()->spawnItem(getLifetimeItens());
+
+    this->getMapa()->combates();
+
+}
+
+
+void Simulador::executeInstant() {
+    std::set<char> processedCaravans;
+
+    for (int row = 0; row < this->getMapa()->getRows(); ++row) {
+        for (int col = 0; col < this->getMapa()->getCols(); ++col) {
+            if (this->getMapa()->getMapa()[row][col].getTipo() == Localizacoes::Caravana) {
+                if (Caravana *car = this->getMapa()->getMapa()[row][col].getCaravana(); car != nullptr) {
+                    if (processedCaravans.contains(car->getId()))
+                        continue; // passa à frente caravanas ja vistas
+
+                    processedCaravans.insert(car->getId());
+
+                    if (car->getDeathCount() == 0)
+                        this->getMapa()->elimina(row, col);
+                    else if (car->getTripulantes() == 0)
+                        car->lastMoves(this->getMapa());
+                    else if (car->getComportamento() == true && car->getTipo() != Tipos::Barbara)
+                        for (int i=0; i<car->getNMoves(); ++i) car->move(this->getMapa());
+
+                }
+            } else if (this->getMapa()->getMapa()[row][col].getTipo() == Localizacoes::Item) {
+                if (Item *item = this->getMapa()->getMapa()[row][col].getItem(); item != nullptr) {
+                    if (item->getTimeLeft() == 0)
+                        this->getMapa()->elimina(row, col);
+                    else
+                        --item;
+                }
+            }
+        }
+    }
+
+    this->setCurrentInstant(getCurrentInstant() + 1);
+}
+
+bool Simulador::readCommand() {
     string line;
     cout << "> ";
     getline(cin, line);
-    istringstream iss;
+    istringstream iss(line);
     string cmd, c1, c2;
     iss >> cmd;
     Caravana *car;
@@ -164,141 +220,210 @@ void Simulador::readCommand() {
 
     if (cmd == "prox") {
         if (int n; iss >> n) {
-            for (int i=0; i<n; i++)
+            for (int i=0; i<n-1; i++) //-1 porque vai executar mais uma vez quando voltar ao run
                 executeInstant();
         }
-        else
-            executeInstant();
-
         setTurnRunning(false);
     }
     else if (cmd == "terminar") {
+        setTurnRunning(false);
         setRunning(false);
     }
     else if (cmd == "comprac") {
         if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
         ch1 = c1[0];
         ch2 = c2[0];
         cid = Cidade::find(this->getMapa(), ch1);
         if (cid == nullptr) {
             cout << "Erro: Nao foi encontrada a cidade '" << ch1 << "'.\n";
-            return;
+            return false;
         }
-        cid->compra(ch2);
+        if (!cid->compra(ch2))
+            cout << "Erro: Tipo invalido de caravana.\n";
     }
     else if (cmd == "precos") {
-
+        cid = Cidade::find(this->getMapa());
+        if (cid == nullptr) {
+            cout << "Erro: Nao existe nenhuma cidade no mapa.\n";
+            return false;
+        }
+        cout << cid->listPrecos();
     }
     else if (cmd == "cidade") {
-        if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        if (!(iss >> ch1)) {
+            cout << "Erro: Parametro invalido\n";
+            return false;
         }
-        ch1 = c1[0];
         cid = Cidade::find(this->getMapa(), ch1);
         if (cid == nullptr) {
             cout << "Erro: Nao foi encontrada a cidade '" << ch1 << "'.\n";
-            return;
+            return false;
         }
         cout << cid->listCaravanas();
     }
     else if (cmd == "caravana") {
-        if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        if (!(iss >> ch1)) {
+            cout << "Erro: Parametro invalido\n";
+            return false;
         }
-        ch1 = c1[0];
         car = Caravana::find(this->getMapa(), ch1);
         if (car == nullptr) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
-            return;
+            return false;
         }
-        cout << car;
+        cout << *car;
     }
     else if (cmd == "compra") {
-        if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        float amount;
+        if (!(iss >> amount >> ch2)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
-        float amount = stof(c1);
-        ch2 = c2[0];
         car = Caravana::find(this->getMapa(), ch2);
         if (car == nullptr) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch2 << "'.\n";
-            return;
+            return false;
         }
+        cid = Cidade::find(this->getMapa(), car);
+        if (cid == nullptr) {
+            cout << "Erro: A caravana '" << car->getId() << "' nao se encontra em nenhuma cidade.\n";
+            return false;
+        }
+        if (!cid->compra(car->getId(), amount))
+            cout << "Erro: Sem moedas suficientes para fazer a compra.\n";
 
     }
     else if (cmd == "vende") {
-
+        if (!(iss >> ch1)) {
+            cout << "Erro: Parametros invalidos.\n";
+            return false;
+        }
+        car = Caravana::find(this->getMapa(), ch1);
+        if (car == nullptr) {
+            cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
+            return false;
+        }
+        cid = Cidade::find(this->getMapa(), car);
+        if (cid == nullptr) {
+            cout << "Erro: A caravana '" << car->getId() << "' nao se encontra em nenhuma cidade.\n";
+            return false;
+        }
+        if (cid->vende(car->getId()))
+            cout << "Venda bem sucedida\n";
     }
     else if (cmd == "move") {
         if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
         ch1 = c1[0];
         car = Caravana::find(this->getMapa(), ch1);
         if (car == nullptr) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
-            return;
+            return false;
+        }
+        if (car->getComportamento() == true) {
+            cout << "Erro: A caravana '" << car->getId() << "' nao aceita instrucoes. Desative primeiro o seu comportamento aleatorio.\n";
+            return false;
+        }
+        if (!manageMoves(car->getId(),car->getNMoves())) {
+            cout << "Erro: A caravana '" << car->getId() << "' atingiu o numero maximo de movimentos este turno.\n";
+            return false;
         }
         car->move(this->getMapa(), c2);
     }
     else if (cmd == "auto") {
-        if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        if (!(iss >> ch1)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
-        ch1 = c1[0];
         car = Caravana::find(this->getMapa(), ch1);
         if (car == nullptr) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
-            return;
+            return false;
         }
         car->setComportamento(true);
     }
     else if (cmd == "stop") {
-        if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        if (!(iss >> ch1)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
-        ch1 = c1[0];
         car = Caravana::find(this->getMapa(), ch1);
         if (car == nullptr) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
-            return;
+            return false;
         }
         car->setComportamento(false);
     }
     else if (cmd == "moedas") {
-        if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        float amount;
+        if (!(iss >> amount)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
-        float amount = stof(c1);
+        if (amount == 0) {
+            cout << "Erro: Introduzido valor nao valido.\n";
+            return false;
+        }
         Caravana::setMoedas(Caravana::getMoedas() + amount);
     }
     else if (cmd == "tripul") {
-        if (!(iss >> c1 >> c2)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+        int nt;
+        if (!(iss >> nt >> ch2)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
+        if (nt == 0) {
+            cout << "Erro: Introduzido valor nao valido.\n";
+            return false;
+        }
+        car = Caravana::find(this->getMapa(), ch2);
+        if (car == nullptr) {
+            cout << "Erro: Nao foi encontrada a caravana '" << ch2 << "'.\n";
+            return false;
+        }
+        cid = Cidade::find(this->getMapa(), car);
+        if (cid == nullptr) {
+            cout << "Erro: A caravana '" << car->getId() << "' nao se encontra em nenhuma cidade.\n";
+            return false;
+        }
+        if (cid->compra(car->getId(), nt))
+            cout << "Compra bem sucedida.\n";
+
+    }
+    else if (cmd == "areia") {
+        int l,c,r;
+        if (!(iss >> l >> c >> r)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
+        }
+        if (!this->getMapa()->tempestade(l,c,r))
+            cout << "Erro: Coordenadas invalidas\n";
+    }
+    else if (cmd == "barbaro") {
+        int l,c;
+        if (!(iss >> l >> c)) {
+            cout << "Erro: Parametros invalidos\n";
+            return false;
+        }
+        if (!this->getMapa()->spawnBarbaro(l,c, getBarbarosLifetime()))
+            cout << "Erro: Coordenadas invalidas\n";
     }
     else if (cmd == "saves") {
         if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
         this->insere_buffer(c1, this->getMapa()->getBuffer());
     }
     else if (cmd == "loads") {
         if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
         cout << get_buffer(c1);
     }
@@ -307,23 +432,17 @@ void Simulador::readCommand() {
     }
     else if (cmd == "dels"){
         if (!(iss >> c1)) {
-            cout << "Erro: Numero insuficiente de parametros\n";
-            return;
+            cout << "Erro: Parametros invalidos\n";
+            return false;
         }
         this->remove_buffer(c1);
     }
     else {
         cout << "Erro: Comando Invalido.\n";
+        return false;
     }
 
-}
-
-void Simulador::executeInstant() {
-
-}
-
-void Simulador::executeTurn() {
-
+    return true;
 }
 
 
@@ -332,20 +451,48 @@ Mapa *Simulador::getMapa() const {
     return mapa_;
 }
 
+int Simulador::getCurrentInstant() const {
+    return currentInstant;
+}
+
+void Simulador::setCurrentInstant(int ci) {
+    currentInstant = ci;
+}
+
+bool Simulador::manageMoves(char id, int moves) {
+    auto it = controlMoves.find(id);
+    if (it == controlMoves.end()) {
+        controlMoves.insert({id,moves-1});
+        return true;
+    }
+    if (it->second > 0) {
+        it->second--;
+        return true;
+    }
+    return false;
+}
+void Simulador::resetMoves() {
+    controlMoves.clear();
+}
 
 std::string Simulador::get_buffer(string nome) {
     ostringstream oss;
     auto it = buffers.find(nome);
     if (it == buffers.end())
         return "Nao encontrado\n";
-    oss << it->second.getContent();
+    oss << it->second;
     return oss.str();
 }
 
 std::string Simulador::list_buffers() const {
     ostringstream oss;
-    for (const auto& b: buffers)
-        oss <<"- " <<  b.first << ";\n";
+    if (buffers.empty()) {
+        oss << "Sem copias de buffers guardadas.\n";
+    } else {
+        oss << "Estao guardados os buffers:\n";
+        for (const auto& b : buffers)
+            oss << "- " << b.first << ";\n";
+    }
     return oss.str();
 }
 

@@ -25,9 +25,11 @@ public:
     int getBarbarosLifetime() const;
     bool getRunning() const;
     bool getTurnRunning() const;
+    int getCurrentInstant() const;
 
     void setRunning(bool r);
     void setTurnRunning(bool tr);
+    void setCurrentInstant(int ci);
 
     static Simulador readFile(const std::string &fileName);
     void run();
@@ -38,7 +40,9 @@ public:
     bool remove_buffer(const std::string& nome);
     std::string get_buffer(std::string nome);
     std::string list_buffers() const;
-    void readCommand();
+    bool readCommand();
+    bool manageMoves(char id, int moves);
+    void resetMoves();
 
     Celula &operator()(int row, int col) const;
 
@@ -50,9 +54,13 @@ private:
     int instantes_barbaros;
     int barbaros_lifetime;
     std::map<std::string, Buffer> buffers;
+    std::map<char, int> controlMoves;
 
     bool running;
     bool turnRunning;
+    int currentInstant;
+    int nCaravanasVivas;
+    int nCombatesVencidos;
 };
 
 

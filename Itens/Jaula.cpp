@@ -7,7 +7,7 @@
 #include "../Localizações/Caravana.h"
 using namespace std;
 
-Jaula::Jaula() = default;
+Jaula::Jaula(const int lifetime): Item(lifetime){}
 
 
 void Jaula::action(Caravana *car) {

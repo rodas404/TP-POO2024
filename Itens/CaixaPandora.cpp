@@ -7,7 +7,7 @@
 #include <sstream>
 using namespace std;
 
-CaixaPandora::CaixaPandora()= default;
+CaixaPandora::CaixaPandora(const int lifetime): Item(lifetime){}
 
 void CaixaPandora::action(Caravana *car) {
     int tripulacao = car->getTripulantes();

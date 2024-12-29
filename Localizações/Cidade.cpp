@@ -12,6 +12,7 @@
 
 #include "../Caravanas/CaravanaComercio.h"
 #include "../Caravanas/CaravanaMilitar.h"
+#include "../Caravanas/CaravanaSecreta.h"
 using namespace std;
 
 Cidade::Cidade(char id_, int pv, int pc, int pcav): id(generateUniqueId(id_)), prVenda(pv), prCompra(pc), prCaravana(pcav) {
@@ -73,6 +74,7 @@ string Cidade::listCaravanas() const {
             if (car->getTipo() == Tipos::Comercio) oss << "Caravana de Comercio ";
             else if (car->getTipo() == Tipos::Barbara) oss << "Caravana Barbara ";
             else if (car->getTipo() == Tipos::Militar) oss << "Caravana Militar ";
+            else if (car->getTipo() == Tipos::Secreta) oss << "Caravana Secreta ";
 
             oss << car->getId() << endl;
         }
@@ -192,6 +194,8 @@ bool Cidade::compra(const char tipo) {
         car = new CaravanaComercio();
     else if (tipo == 'M')
         car = new CaravanaMilitar();
+    else if (tipo == 'S')
+        car = new CaravanaSecreta();
     else
         return false;
 
@@ -229,3 +233,29 @@ Cidade *Cidade::find(const Mapa *mapa, const char id) {
     }
     return nullptr;
 }
+
+Cidade *Cidade::find(const Mapa *mapa, const Caravana *car) {
+    for (int row = 0; row < mapa->getRows(); ++row) {
+        for (int col = 0; col < mapa->getCols(); ++col) {
+            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
+                if (mapa->getMapa()[row][col].getCidade()->isHere(car->getId()) != nullptr)
+                    return mapa->getMapa()[row][col].getCidade();
+            }
+        }
+    }
+    return nullptr;
+}
+
+
+Cidade *Cidade::find(const Mapa *mapa) {
+    for (int row = 0; row < mapa->getRows(); ++row) {
+        for (int col = 0; col < mapa->getCols(); ++col) {
+            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
+                if (mapa->getMapa()[row][col].getCidade())
+                    return mapa->getMapa()[row][col].getCidade();
+            }
+        }
+    }
+    return nullptr;
+}
+

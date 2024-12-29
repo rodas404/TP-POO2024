@@ -7,7 +7,7 @@
 #include "../Localizações/Caravana.h"
 using namespace std;
 
-PacoteSuspenso::PacoteSuspenso() = default;
+PacoteSuspenso::PacoteSuspenso(const int lifetime): Item(lifetime){}
 
 
 void PacoteSuspenso::action(Caravana *car) {

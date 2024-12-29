@@ -9,7 +9,7 @@
 
 class Mina: public Item{
 public:
-    Mina();
+    Mina(int lifetime = 20);
     std::string getDescricao() const override;
     void action(Caravana *car) override;
 };

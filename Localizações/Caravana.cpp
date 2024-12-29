@@ -13,7 +13,7 @@ using namespace std;
 float Caravana::moedas = 0.0f;
 std::set<char> Caravana::usedIds;
 
-Caravana::Caravana(const char id_, const int trip, const float carga, const int agua, const bool comp, const int dc, const int maxT, const Tipos t): id(generateUniqueId(id_)), nTripulantes(trip), maxTripulacao(maxT), pMercadorias(0), maxMercadorias(carga), qAgua(agua), maxAgua(agua), deathCount(dc), compAleatorio(comp), tipo(t) {
+Caravana::Caravana(const char id_, const int trip, const float carga, const int agua, const bool comp, const int dc, const int maxT, const Tipos t, const int nm): id(generateUniqueId(id_)), nTripulantes(trip), maxTripulacao(maxT), pMercadorias(0), maxMercadorias(carga), qAgua(agua), maxAgua(agua), deathCount(dc), compAleatorio(comp), tipo(t), nMoves(nm) {
 
 }
 
@@ -31,11 +31,12 @@ Caravana &Caravana::operator=(const Caravana &outro) {
     deathCount = outro.deathCount;
     compAleatorio = outro.compAleatorio;
     tipo = outro.tipo;
+    nMoves = outro.nMoves;
 
     return *this;
 }
 
-Caravana::Caravana(const Caravana &outro): id(outro.id), nTripulantes(outro.nTripulantes), maxTripulacao(outro.maxTripulacao), pMercadorias(outro.pMercadorias), maxMercadorias(outro.maxMercadorias), qAgua(outro.qAgua), maxAgua(outro.maxAgua), deathCount(outro.deathCount), compAleatorio(outro.compAleatorio), tipo(outro.tipo) {
+Caravana::Caravana(const Caravana &outro): id(outro.id), nTripulantes(outro.nTripulantes), maxTripulacao(outro.maxTripulacao), pMercadorias(outro.pMercadorias), maxMercadorias(outro.maxMercadorias), qAgua(outro.qAgua), maxAgua(outro.maxAgua), deathCount(outro.deathCount), compAleatorio(outro.compAleatorio), tipo(outro.tipo), nMoves(outro.nMoves) {
 
 }
 
@@ -96,6 +97,11 @@ float Caravana::getMoedas() {
     return moedas;
 }
 
+int Caravana::getNMoves() const {
+    return nMoves;
+}
+
+
 
 int Caravana::getTripulantes() const {
     return nTripulantes;
@@ -155,7 +161,9 @@ std::string Caravana::getInfo() const {
                       "\nCapacidade de Carga: " << this->getMaxMerc() <<
                          "\nLitros de Agua: " << this->getAgua() <<
                                "\nCapacidade de Agua do Deposito: " << this->getMaxAgua() <<
-                                   "\nComportamento automatico? " << (this->getComportamento() == true ? "Sim" : "Nao") << endl;
+                                   "\nComportamento automatico? " << (this->getComportamento() == true ? "Sim" : "Nao") <<
+                                       "\nInstantes para morte: "<< this->getDeathCount() <<
+                                           "\nMovimentos por turno: " << this->getNMoves() << endl;
     return oss.str();
 
 }

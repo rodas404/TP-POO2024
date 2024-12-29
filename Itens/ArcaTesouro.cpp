@@ -8,7 +8,7 @@
 #include "../Localizações/Caravana.h"
 using namespace std;
 
-ArcaTesouro::ArcaTesouro() = default;
+ArcaTesouro::ArcaTesouro(const int lifetime): Item(lifetime){}
 
 
 void ArcaTesouro::action(Caravana *car) {

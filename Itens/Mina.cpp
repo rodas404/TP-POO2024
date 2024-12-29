@@ -7,7 +7,7 @@
 #include "../Localizações/Caravana.h"
 using namespace std;
 
-Mina::Mina() = default;
+Mina::Mina(const int lifetime): Item(lifetime){}
 
 
 void Mina::action(Caravana *car) {

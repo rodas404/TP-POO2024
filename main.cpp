@@ -14,6 +14,13 @@ int main() {
     cout << m;*/
     Simulador sim = Simulador::readFile("configs.txt");
     cout << *sim.getMapa();
+    sim.readCommand();
+    sim.readCommand();
+    sim.readCommand();
+    sim.readCommand();
+    sim.executeInstant();
+    cout << *sim.getMapa();
+
 
 
     return 0;
