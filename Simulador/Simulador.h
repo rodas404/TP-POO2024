@@ -7,7 +7,6 @@
 #include <map>
 #include <string>
 
-class Celula;
 class Buffer;
 class Mapa;
 
@@ -26,25 +25,30 @@ public:
     bool getRunning() const;
     bool getTurnRunning() const;
     int getCurrentInstant() const;
+    int getVitorias() const;
+    int getItensApanhados() const;
 
     void setRunning(bool r);
     void setTurnRunning(bool tr);
     void setCurrentInstant(int ci);
+    void setVitorias(int n);
+    void setItensApanhados(int n);
 
+    static void start();
     static Simulador readFile(const std::string &fileName);
     void run();
     void executeInstant();
     void executeTurn();
+    void isOver();
 
     bool insere_buffer(const std::string &nome, const Buffer& buffer);
     bool remove_buffer(const std::string& nome);
-    std::string get_buffer(std::string nome);
+    std::string get_buffer(const std::string& nome);
     std::string list_buffers() const;
-    bool readCommand();
+    int readCommand(const std::string &line);
     bool manageMoves(char id, int moves);
     void resetMoves();
-
-    Celula &operator()(int row, int col) const;
+    bool exec(const std::string &fileName);
 
 private:
     Mapa *mapa_;
@@ -59,10 +63,10 @@ private:
     bool running;
     bool turnRunning;
     int currentInstant;
-    int nCaravanasVivas;
-    int nCombatesVencidos;
+    int nItensApanhados;
+    int nVitorias;
 };
 
-
+std::ostream &operator<<(std::ostream &output, const Simulador &s);
 
 #endif //SIMULADOR_H

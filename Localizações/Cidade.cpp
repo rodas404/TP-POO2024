@@ -4,6 +4,8 @@
 #include <set>
 #include <stdexcept>
 #include "Cidade.h"
+
+#include <array>
 #include "Caravana.h"
 #include <string>
 #include "../Mapa/Mapa.h"
@@ -15,12 +17,16 @@
 #include "../Caravanas/CaravanaSecreta.h"
 using namespace std;
 
-Cidade::Cidade(char id_, int pv, int pc, int pcav): id(generateUniqueId(id_)), prVenda(pv), prCompra(pc), prCaravana(pcav) {
+int Cidade::prVenda = 0;
+int Cidade::prCompra = 0;
+int Cidade::prCaravana = 0;
+
+Cidade::Cidade(const char id_): id(generateUniqueId(id_)), comprada({false, false, false}) {
 
 }
 
 
-Cidade::Cidade(const Cidade &outro): id(outro.id), prVenda(outro.prVenda), prCompra(outro.prCompra), prCaravana(outro.prCaravana) {
+Cidade::Cidade(const Cidade &outro): id(outro.id), comprada(outro.comprada) {
     for (int i=0; i<outro.caravanas_.size(); ++i)
         caravanas_.push_back(outro.caravanas_[i]->duplica());
 }
@@ -42,7 +48,7 @@ char Cidade::generateUniqueId(const char preferredId) {
             return c;
         }
     }
-    throw std::runtime_error("Ja nao ha mais ids disponiveis.");
+    throw std::runtime_error("Erro: Nao ha mais ids disponiveis para criar cidades.");
 }
 
 bool Cidade::chegou_caravana(const Caravana *car) {
@@ -71,12 +77,12 @@ string Cidade::listCaravanas() const {
         oss << "Estao presentes na cidade '" << this->getId() << "' as caravanas:\n";
         for (auto &car: caravanas_) {
             oss << "- ";
-            if (car->getTipo() == Tipos::Comercio) oss << "Caravana de Comercio ";
-            else if (car->getTipo() == Tipos::Barbara) oss << "Caravana Barbara ";
-            else if (car->getTipo() == Tipos::Militar) oss << "Caravana Militar ";
-            else if (car->getTipo() == Tipos::Secreta) oss << "Caravana Secreta ";
+            if (car->getTipo() == Tipos::Comercio) oss << "Caravana de Comercio '";
+            else if (car->getTipo() == Tipos::Barbara) oss << "Caravana Barbara '";
+            else if (car->getTipo() == Tipos::Militar) oss << "Caravana Militar '";
+            else if (car->getTipo() == Tipos::Secreta) oss << "Caravana Secreta '";
 
-            oss << car->getId() << endl;
+            oss << car->getId() << "';\n";
         }
     }
     return oss.str();
@@ -100,15 +106,13 @@ Cidade &Cidade::operator=(const Cidade &outro) {
         return *this;
 
     id = outro.getId();
-    prCaravana = outro.prCaravana;
-    prCompra = outro.prCompra;
-    prVenda = outro.prVenda;
+    comprada = outro.comprada;
 
     for (auto &car: caravanas_)
         delete car;
     caravanas_.clear();
 
-    for (int i=0; i<outro.caravanas_.size(); ++i)
+    for (int i = 0; i < outro.caravanas_.size(); ++i)
         caravanas_.push_back(outro.caravanas_[i]->duplica());
 
     return *this;
@@ -135,7 +139,7 @@ bool Cidade::vende(const char id) const {
         return false;
 
     float mercadorias = car->getMercadorias();
-    float valorVenda = mercadorias * static_cast<float>(this->getPrVenda());
+    float valorVenda = mercadorias * static_cast<float>(Cidade::getPrVenda());
     car->setMercadorias(0);
 
     float moedas = Caravana::getMoedas();
@@ -144,24 +148,38 @@ bool Cidade::vende(const char id) const {
     return true;
 }
 
-int Cidade::getPrCaravana() const {
+int Cidade::getPrCaravana() {
     return prCaravana;
 }
 
-int Cidade::getPrCompra() const {
+int Cidade::getPrCompra() {
     return prCompra;
 }
 
-int Cidade::getPrVenda() const {
+int Cidade::getPrVenda() {
     return prVenda;
 }
 
-std::string Cidade::listPrecos() const {
+void Cidade::setPrCaravana(const int pr) {
+    prCaravana = pr;
+}
+
+void Cidade::setPrCompra(const int pr) {
+    prCompra = pr;
+}
+
+void Cidade::setPrVenda(const int pr) {
+    prVenda = pr;
+}
+
+
+
+std::string Cidade::listPrecos() {
     ostringstream oss;
     oss << "Precos praticados neste momento:\n" <<
-        "- Venda de Mercadoria: " << this->getPrVenda() << "p/ton\n" <<
-            "- Compra de Mercadoria: " << this->getPrCompra() << "p/ton\n" <<
-                "- Compra de Caravana: " << this->getPrCaravana() << endl;
+        "- Venda de Mercadoria: " << getPrVenda() << "p/ton\n" <<
+            "- Compra de Mercadoria: " << getPrCompra() << "p/ton\n" <<
+                "- Compra de Caravana: " << getPrCaravana() << endl;
     return oss.str();
 }
 
@@ -172,7 +190,7 @@ bool Cidade::compra(const char id, const float t) const {
         return false;
 
     float moedas = Caravana::getMoedas();
-    float preco = t * static_cast<float>(this->getPrCompra());
+    float preco = t * static_cast<float>(Cidade::getPrCompra());
 
     if (preco > moedas)
         return false;
@@ -182,26 +200,53 @@ bool Cidade::compra(const char id, const float t) const {
     return true;
 }
 
-bool Cidade::compra(const char tipo) {
+int Cidade::caravanasEstacionadas() const {
+    return static_cast<int>(caravanas_.size());
+}
+
+
+int Cidade::compra(const char tipo) {
     float moedas = Caravana::getMoedas();
-    float preco = static_cast<float>(this->getPrCaravana());
+    float preco = static_cast<float>(getPrCaravana());
 
     if (preco > moedas)
-        return false;
+        return -1;
+    try {
+        Caravana *car;
+        if (tipo == 'C' || tipo == 'c') {
+            if (comprada[0] == false) {
+                car = new CaravanaComercio();
+                comprada[0] = true;
+            }
+            else
+                return 0;
+        }
+        else if (tipo == 'M' || tipo == 'm') {
+            if (comprada[1] == false) {
+                car = new CaravanaMilitar();
+                comprada[1] = true;
+            }
+            else
+                return 0;
+        }
+        else if (tipo == 'S' || tipo == 's') {
+            if (comprada[2] == false) {
+                car = new CaravanaSecreta();
+                comprada[2] = true;
+            }
+            else
+                return 0;
+        }
+        else
+            return -2;
 
-    Caravana *car;
-    if (tipo == 'C')
-        car = new CaravanaComercio();
-    else if (tipo == 'M')
-        car = new CaravanaMilitar();
-    else if (tipo == 'S')
-        car = new CaravanaSecreta();
-    else
-        return false;
-
-    Caravana::setMoedas(moedas - preco);
-    this->chegou_caravana(car);
-    return true;
+        Caravana::setMoedas(moedas - preco);
+        this->chegou_caravana(car);
+        return 1;
+    } catch (const exception& e) {
+        cout << e.what() << endl;
+        return -1;
+    }
 }
 
 bool Cidade::compra(const char id, const int nt) const {
@@ -210,7 +255,7 @@ bool Cidade::compra(const char id, const int nt) const {
         return false;
 
     float moedas = Caravana::getMoedas();
-    float preco = static_cast<float>(nt * this->getPrCompra());
+    float preco = static_cast<float>(nt * getPrCompra());
 
     if (preco > moedas)
         return false;
@@ -247,15 +292,4 @@ Cidade *Cidade::find(const Mapa *mapa, const Caravana *car) {
 }
 
 
-Cidade *Cidade::find(const Mapa *mapa) {
-    for (int row = 0; row < mapa->getRows(); ++row) {
-        for (int col = 0; col < mapa->getCols(); ++col) {
-            if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
-                if (mapa->getMapa()[row][col].getCidade())
-                    return mapa->getMapa()[row][col].getCidade();
-            }
-        }
-    }
-    return nullptr;
-}
 

@@ -82,7 +82,10 @@ void Buffer::put(const string& s) {
 
 
 Buffer &Buffer::operator<<(const Caravana *car) {
-    put(car->getId());
+    if (car->getTipo() == Tipos::Barbara)
+        put('!');
+    else
+        put(car->getId());
     return *this;
 }
 

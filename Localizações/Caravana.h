@@ -51,9 +51,9 @@ public:
 
     //metodos
     std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
-    virtual void move(Mapa* mapa, std::string &direction); //move com instrucoes
-    virtual void move(Mapa *mapa) = 0; //move sem instrucoes
-    virtual void lastMoves(Mapa *mapa) = 0;
+    virtual int move(Mapa* mapa, std::string &direction); //move com instrucoes
+    virtual int move(Mapa *mapa) = 0; //move sem instrucoes
+    virtual int lastMoves(Mapa *mapa) = 0;
     virtual std::string getInfo() const;
     virtual void efeitoTempestade() = 0;
 

@@ -85,7 +85,7 @@ std::string Celula::getDescricao() const {
     if (this->getCaravana() != nullptr)
         oss << this->getCaravana()->getInfo();
     else if (this->getCidade() != nullptr)
-        oss << this->getCidade()->listPrecos() << this->getCidade()->listCaravanas();
+        oss << Cidade::listPrecos() << this->getCidade()->listCaravanas();
     else if (this->getItem() != nullptr)
         oss << this->getItem()->getDescricao();
     else if (this->getTipo() == Localizacoes::Montanha)

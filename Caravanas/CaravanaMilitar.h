@@ -10,12 +10,13 @@
 class CaravanaMilitar: public Caravana{
 public:
     CaravanaMilitar(char id_ = '\0');
-
+    CaravanaMilitar(const CaravanaMilitar &outro);
+    CaravanaMilitar &operator=(const CaravanaMilitar &outro);
     CaravanaMilitar* duplica() const override;
 
-    void move(Mapa *mapa, std::string &direction) override;
-    void move(Mapa *mapa) override;
-    void lastMoves(Mapa *mapa) override;
+    int move(Mapa *mapa, std::string &direction) override;
+    int move(Mapa *mapa) override;
+    int lastMoves(Mapa *mapa) override;
     std::string getInfo() const override;
     void efeitoTempestade() override;
 

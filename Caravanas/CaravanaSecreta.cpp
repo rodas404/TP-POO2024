@@ -13,6 +13,16 @@ using namespace std;
 CaravanaSecreta::CaravanaSecreta(const char id_): Caravana(id_, 30, 0, 350, false, 3, 40, Tipos::Secreta, 1) {
 
 }
+CaravanaSecreta::CaravanaSecreta(const CaravanaSecreta &outro) : Caravana(outro) {
+}
+
+CaravanaSecreta &CaravanaSecreta::operator=(const CaravanaSecreta &outro) {
+    if (this == &outro)
+        return *this;
+
+    Caravana::operator=(outro);
+    return *this;
+}
 
 CaravanaSecreta *CaravanaSecreta::duplica() const {
     return new CaravanaSecreta(*this);
@@ -54,19 +64,18 @@ void CaravanaSecreta::efeitoTempestade() {
     }
 }
 
-void CaravanaSecreta::move(Mapa *mapa, std::string &direction) {
-    Caravana::move(mapa, direction);
+int CaravanaSecreta::move(Mapa *mapa, std::string &direction) {
+    int res = Caravana::move(mapa, direction);
+    if (res == -1)
+        return -1;
     consomeAgua();
+    return res;
 }
 
-void CaravanaSecreta::move(Mapa *mapa) {
+int CaravanaSecreta::move(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
     int targetRow = row, targetCol = col;
 
-    // nao mover se estiver numa cidade
-    if (mapa->getMapa()[row][col].getTipo() == Localizacoes::Cidade) {
-        return; 
-    }
 
     bool found = false;
 
@@ -105,10 +114,13 @@ void CaravanaSecreta::move(Mapa *mapa) {
     }
 
     consomeAgua();
-    mapa->move(this, targetRow, targetCol);
+    int res = mapa->move(this, targetRow, targetCol);
+    return res;
 }
 
-void CaravanaSecreta::lastMoves(Mapa *mapa) {
+int CaravanaSecreta::lastMoves(Mapa *mapa) {
+    setComportamento(true);
     this->setDeathCount(this->getDeathCount() - 1);
+    return 0;
 }
 

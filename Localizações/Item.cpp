@@ -35,6 +35,14 @@ Item::Item(const Item &outro): id(outro.getId()), timeLeft(outro.timeLeft) {
 
 }
 
+void Item::setTimeLeft(const int tl) {
+    if (tl < 0)
+        timeLeft = 0;
+    else
+        timeLeft = tl;
+}
+
+
 int Item::getId() const {
     return id;
 }

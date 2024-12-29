@@ -16,19 +16,33 @@ CaravanaMilitar::CaravanaMilitar(const char id_): Caravana(id_, 40, 5, 400, fals
 CaravanaMilitar *CaravanaMilitar::duplica() const {
     return new CaravanaMilitar(*this);
 }
+CaravanaMilitar::CaravanaMilitar(const CaravanaMilitar &outro) : Caravana(outro), lastDirection(outro.lastDirection) {
+}
 
-void CaravanaMilitar::move(Mapa *mapa, string &direction) {
-    Caravana::move(mapa, direction);
+CaravanaMilitar &CaravanaMilitar::operator=(const CaravanaMilitar &outro) {
+    if (this == &outro)
+        return *this;
+
+    Caravana::operator=(outro);
+    lastDirection = outro.lastDirection;
+    return *this;
+}
+
+int CaravanaMilitar::move(Mapa *mapa, string &direction) {
+    int res = Caravana::move(mapa, direction);
+    if (res == -1)
+        return -1;
     setLastDirection(direction);
     consomeAgua();
+    return res;
 }
 
 
 
-void CaravanaMilitar::move(Mapa *mapa) {
+int CaravanaMilitar::move(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
     if (row == -1 && col == -1)
-        return;
+        return -1;
 
     int targetRow = row, targetCol = col;
     bool found = false;
@@ -89,7 +103,8 @@ void CaravanaMilitar::move(Mapa *mapa) {
         else if (targetRow == row + 1 && targetCol == col + 1) setLastDirection("BD");
     }
 
-    mapa->move(this, targetRow, targetCol);
+    int res = mapa->move(this, targetRow, targetCol);
+    return res;
 }
 
 std::string CaravanaMilitar::getInfo() const {
@@ -118,11 +133,9 @@ void CaravanaMilitar::consomeAgua() {
 }
 
 
-void CaravanaMilitar::lastMoves(Mapa *mapa) {
+int CaravanaMilitar::lastMoves(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
-    if (row == -1 && col == -1)
-        return;
-
+    setComportamento(true);
     int newRow = row, newCol = col;
 
     string lastDirection = getLastDirection();
@@ -149,8 +162,9 @@ void CaravanaMilitar::lastMoves(Mapa *mapa) {
         newCol = (col + 1 + mapa->getCols()) % mapa->getCols();
     }
 
-    mapa->move(this, newRow, newCol);
+    int res = mapa->move(this, newRow, newCol);
     this->setDeathCount(this->getDeathCount() - 1);
+    return res;
 }
 
 void CaravanaMilitar::efeitoTempestade() {

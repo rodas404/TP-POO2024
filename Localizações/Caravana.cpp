@@ -13,7 +13,7 @@ using namespace std;
 float Caravana::moedas = 0.0f;
 std::set<char> Caravana::usedIds;
 
-Caravana::Caravana(const char id_, const int trip, const float carga, const int agua, const bool comp, const int dc, const int maxT, const Tipos t, const int nm): id(generateUniqueId(id_)), nTripulantes(trip), maxTripulacao(maxT), pMercadorias(0), maxMercadorias(carga), qAgua(agua), maxAgua(agua), deathCount(dc), compAleatorio(comp), tipo(t), nMoves(nm) {
+Caravana::Caravana(const char id_, const int trip, const float carga, const int agua, const bool comportamento, const int dc, const int maxT, const Tipos t, const int nm): id(generateUniqueId(id_)), nTripulantes(trip), maxTripulacao(maxT), pMercadorias(0), maxMercadorias(carga), qAgua(agua), maxAgua(agua), deathCount(dc), compAleatorio(comportamento), tipo(t), nMoves(nm) {
 
 }
 
@@ -65,10 +65,9 @@ char Caravana::generateUniqueId(const char preferredId) {
         }
     }
 
-    if (preferredId == '!')
-        return '!';
 
-    throw std::runtime_error("No available IDs.");
+
+    throw std::runtime_error("Erro: Nao ha mais ids disponveis para criar caravanas.");
 }
 
 
@@ -163,7 +162,8 @@ std::string Caravana::getInfo() const {
                                "\nCapacidade de Agua do Deposito: " << this->getMaxAgua() <<
                                    "\nComportamento automatico? " << (this->getComportamento() == true ? "Sim" : "Nao") <<
                                        "\nInstantes para morte: "<< this->getDeathCount() <<
-                                           "\nMovimentos por turno: " << this->getNMoves() << endl;
+                                           "\nMovimentos por turno: " << this->getNMoves() <<
+                                               "\nMoedas: " << getMoedas() << endl;
     return oss.str();
 
 }
@@ -203,30 +203,34 @@ Caravana *Caravana::find(const Mapa *mapa, const char id) {
 }
 
 
-void Caravana::move(Mapa *mapa, std::string &direction) {
+int Caravana::move(Mapa *mapa, std::string &direction) {
     std::pair<int, int> coordinates = getCoordenadas(mapa);
     int row = coordinates.first;
     int col = coordinates.second;
+    int res;
 
     if (row == -1 && col == -1)
-        return;
+        return -1;
 
-    if (direction == "BE")
-        mapa->move(this, row + 1, col - 1);
-    else if (direction == "BD")
-        mapa->move(this, row + 1, col + 1);
-    else if (direction == "CE")
-        mapa->move(this, row - 1, col - 1);
-    else if (direction == "CD")
-        mapa->move(this, row - 1, col + 1);
-    else if (direction == "D")
-        mapa->move(this, row, col+1);
-    else if (direction == "E")
-        mapa->move(this, row, col-1);
-    else if (direction == "C")
-        mapa->move(this, row-1, col);
-    else if (direction == "B")
-        mapa->move(this, row+1, col);
+    if (direction == "BE" || direction == "be")
+        res = mapa->move(this, row + 1, col - 1);
+    else if (direction == "BD" || direction == "bd")
+        res = mapa->move(this, row + 1, col + 1);
+    else if (direction == "CE" || direction == "ce")
+        res = mapa->move(this, row - 1, col - 1);
+    else if (direction == "CD" || direction == "cd")
+        res = mapa->move(this, row - 1, col + 1);
+    else if (direction == "D" || direction == "d")
+        res = mapa->move(this, row, col+1);
+    else if (direction == "E" || direction == "e")
+        res = mapa->move(this, row, col-1);
+    else if (direction == "C" || direction == "c")
+        res = mapa->move(this, row-1, col);
+    else if (direction == "B" || direction == "b")
+        res = mapa->move(this, row+1, col);
+    else
+        return -1;
+    return res;
 }
 
 

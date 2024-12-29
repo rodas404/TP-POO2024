@@ -18,7 +18,7 @@
 #include "../Itens/PacoteSuspenso.h"
 #include "../Caravanas/CaravanaBarbara.h"
 
-Mapa::Mapa(int numRows, int numCols): nRows(numRows), nCols(numCols), buffer_(numRows,numCols) {
+Mapa::Mapa(const int numRow, const int numCols): nRows(numRow), nCols(numCols), buffer_(numRow,numCols) {
     mapa = new Celula *[nRows];
     for (int i=0; i<nRows; i++) {
         mapa[i] = new Celula[nCols];
@@ -88,7 +88,9 @@ Mapa Mapa::readFile(const string &fileName) {
     for (int i = 0; i < details.size(); ++i) {
         cout << detailNames[i] << ": " << details[i] << endl;
     }
-
+    Cidade::setPrCaravana(details[6]);
+    Cidade::setPrCompra(details[5]);
+    Cidade::setPrVenda(details[4]);
     Mapa mapa(nRows, nCols);
     // configurar mapa
     for (int i = 0; i < nRows; ++i) {
@@ -102,7 +104,7 @@ Mapa Mapa::readFile(const string &fileName) {
                 mapa.buffer_ << '+';
             }
             else if (ch >= 'a' && ch <= 'z') {
-                Cidade* cidade = new Cidade(ch, details[4], details[5], details[6]);
+                Cidade* cidade = new Cidade(ch);
                 mapa.mapa[i][j].setCelula(cidade);
                 mapa.buffer_ << cidade;
             }
@@ -143,10 +145,10 @@ Mapa& Mapa::operator=(const Mapa& outro) {
     return *this;
 }
 
-bool Mapa::move(Caravana *car, int drow, int dcol) {
+int Mapa::move(Caravana *car, int drow, int dcol) {
     auto[row, col] = car->getCoordenadas(this);
     if (row == -1 && col == -1) // não encontrou caravana
-        return false;
+        return -1;
 
     // corrigir as coordenadas (o mapa é circular)
     if (drow >= nRows)
@@ -159,8 +161,8 @@ bool Mapa::move(Caravana *car, int drow, int dcol) {
     else if (dcol < 0)
         dcol = nCols + (dcol % nCols);
 
-    if (mapa[drow][dcol].getTipo() != Localizacoes::Deserto && mapa[drow][dcol].getTipo() != Localizacoes::Cidade) // verifica primeiro se move em condições, meter função fixe para acidentes
-        return false;
+    if (mapa[drow][dcol].getTipo() != Localizacoes::Deserto && mapa[drow][dcol].getTipo() != Localizacoes::Cidade) // verifica primeiro se move em condições
+        return -1;
 
     if (mapa[row][col].getTipo() == Localizacoes::Cidade) { // sai de uma cidade
         if (mapa[row][col].getCidade()->sai_caravana(car->getId())) {
@@ -181,19 +183,21 @@ bool Mapa::move(Caravana *car, int drow, int dcol) {
         buffer_(row, col) << DESERTO_CHAR;
     }
 
-    //apanhar itens
+    // apanhar itens
+    int itemsPicked = 0;
     for (int dr = -1; dr <= 1; ++dr) {
         for (int dc = -1; dc <= 1; ++dc) {
             int adjRow = (drow + dr + nRows) % nRows;
             int adjCol = (dcol + dc + nCols) % nCols;
             if (mapa[adjRow][adjCol].getItem() != nullptr) {
                 mapa[adjRow][adjCol].getItem()->action(car);
-                elimina(adjRow,adjCol);
+                elimina(adjRow, adjCol);
+                itemsPicked++;
             }
         }
     }
 
-    return true;
+    return itemsPicked;
 }
 
 bool Mapa::elimina(const int row, const int col) {
@@ -218,6 +222,21 @@ int Mapa::numItens() const {
         for (int col = 0; col < this->getCols(); ++col) {
             if (mapa[row][col].getTipo() == Localizacoes::Item) {
                 if (mapa[row][col].getItem() != nullptr) ++count;
+            }
+        }
+    }
+    return count;
+}
+
+int Mapa::numCaravanas() const {
+    int count = 0;
+    for (int row = 0; row < this->getRows(); ++row) { // percorrer mapa
+        for (int col = 0; col < this->getCols(); ++col) {
+            if (mapa[row][col].getTipo() == Localizacoes::Caravana) {
+                if (Caravana* car = mapa[row][col].getCaravana(); car != nullptr && car->getTipo() != Tipos::Barbara) ++count;
+            }
+            else if (mapa[row][col].getTipo() == Localizacoes::Cidade) {
+                if (Cidade* cid = mapa[row][col].getCidade(); cid != nullptr) count += cid->caravanasEstacionadas();
             }
         }
     }
@@ -252,25 +271,30 @@ bool Mapa::elimina(const Caravana *car) {
     return true;
 }
 
-void Mapa::combates() {
+pair<int, int> Mapa::combates() {
+    int totalCombates = 0;
+    int vitoriaCaravanas = 0;
     for (int row = 0; row < this->getRows(); ++row) {
         for (int col = 0; col < this->getCols(); ++col) {
             if (mapa[row][col].getTipo() == Localizacoes::Caravana) {
                 Caravana* carBar = mapa[row][col].getCaravana();
-                if (carBar && carBar->getTipo() == Tipos::Barbara) {
+                if (carBar != nullptr && carBar->getTipo() == Tipos::Barbara) {
                     int adjacencias[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
                     for (auto& dir : adjacencias) {
                         int newRow = (row + dir[0] + nRows) % nRows;
                         int newCol = (col + dir[1] + nCols) % nCols;
                         Caravana* car = mapa[newRow][newCol].getCaravana();
-                        if (car && car->getTipo() != Tipos::Barbara) {
-                            combate(carBar, car);
+                        if (car != nullptr && car->getTipo() != Tipos::Barbara) {
+                            totalCombates++;
+                            if (combate(carBar, car) == 1) vitoriaCaravanas++;
                         }
                     }
                 }
             }
         }
     }
+
+    return {totalCombates, vitoriaCaravanas};
 }
 
 
@@ -351,11 +375,17 @@ bool Mapa::elimina(const Item *item) {
 
 
 bool Mapa::tempestade(const int row, const int col, const int r) const {
-    if (row < 0 || row >= nRows || col < 0 || col >= nCols)
+    if (row < 0 || row >= nRows || col < 0 || col >= nCols || r < 0)
         return false;
 
-    for (int i = -r; i <= r; ++i) {
-        for (int j = -r; j <= r; ++j) {
+    // Limita os deslocamentos ao tamanho do mapa
+    int minRow = max(-r, -row);         // Não ultrapassa o topo do mapa
+    int maxRow = min(r, nRows - row - 1); // Não ultrapassa o final do mapa
+    int minCol = max(-r, -col);         // Não ultrapassa a primeira coluna
+    int maxCol = min(r, nCols - col - 1); // Não ultrapassa a última coluna
+
+    for (int i = minRow; i <= maxRow; ++i) {
+        for (int j = minCol; j <= maxCol; ++j) {
             int newRow = (row + i + nRows) % nRows;
             int newCol = (col + j + nCols) % nCols;
 
@@ -370,14 +400,19 @@ bool Mapa::tempestade(const int row, const int col, const int r) const {
 }
 
 
+
 bool Mapa::spawnBarbaro(const int row, const int col, const int lifetime) {
     if (mapa[row][col].getTipo() != Localizacoes::Deserto)
         return false;
-
-    Caravana* barbaro = new CaravanaBarbara(lifetime);
-    mapa[row][col].setCelula(barbaro);
-    buffer_(row, col) << barbaro;
-    return true;
+    try {
+        Caravana* barbaro = new CaravanaBarbara(lifetime);
+        mapa[row][col].setCelula(barbaro);
+        buffer_(row, col) << barbaro;
+        return true;
+    }catch (const exception& e) {
+        cout << e.what() << endl;
+        return false;
+    }
 }
 
 
@@ -410,8 +445,11 @@ void Mapa::spawnBarbaro(const int lifetime) {
         row = disRow(gen);
         col = disCol(gen);
     } while (mapa[row][col].getTipo() != Localizacoes::Deserto);
-
-    Caravana* barbaro = new CaravanaBarbara(lifetime);
-    mapa[row][col].setCelula(barbaro);
-    buffer_(row, col) << barbaro;
+    try {
+        Caravana* barbaro = new CaravanaBarbara(lifetime);
+        mapa[row][col].setCelula(barbaro);
+        buffer_(row, col) << barbaro;
+    }catch (const exception& e) {
+        cout << e.what() << endl;
+    }
 }

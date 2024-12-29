@@ -21,7 +21,9 @@ public:
     int getId() const;
     int getTimeLeft() const;
 
+    void setTimeLeft(int tl);
     Item &operator--();
+
     virtual void action(Caravana *car) = 0;
     std::pair<int, int> getCoordenadas(const Mapa *mapa) const;
     virtual std::string getDescricao() const = 0;

@@ -10,7 +10,7 @@ colunas 20
 ....++............++
 .....3........!.....
 ..........4.........
-moedas 1000
+moedas 100
 instantes_entre_novos_itens 10
 duração_item 20
 max_itens 5

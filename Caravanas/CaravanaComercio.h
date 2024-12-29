@@ -10,12 +10,13 @@
 class CaravanaComercio: public Caravana{
 public:
     CaravanaComercio(char id_ = '\0');
-
+    CaravanaComercio(const CaravanaComercio &outro);
+    CaravanaComercio &operator=(const CaravanaComercio &outro);
     CaravanaComercio* duplica() const override;
 
-    void move(Mapa *mapa, std::string &direction) override;
-    void move(Mapa *mapa) override;
-    void lastMoves(Mapa *mapa) override;
+    int move(Mapa *mapa, std::string &direction) override;
+    int move(Mapa *mapa) override;
+    int lastMoves(Mapa *mapa) override;
     std::string getInfo() const override;
     void efeitoTempestade() override;
 

@@ -17,13 +17,25 @@ CaravanaComercio *CaravanaComercio::duplica() const {
     return new CaravanaComercio(*this);
 }
 
-
-void CaravanaComercio::move(Mapa *mapa,string &direction) {
-    Caravana::move(mapa, direction);
-    consomeAgua();
+CaravanaComercio::CaravanaComercio(const CaravanaComercio &outro) : Caravana(outro) {
 }
 
-void CaravanaComercio::move(Mapa *mapa) {
+CaravanaComercio &CaravanaComercio::operator=(const CaravanaComercio &outro) {
+    if (this == &outro)
+        return *this;
+
+    Caravana::operator=(outro);
+    return *this;
+}
+int CaravanaComercio::move(Mapa *mapa,string &direction) {
+    int res = Caravana::move(mapa, direction);
+    if (res == -1)
+        return -1;
+    consomeAgua();
+    return res;
+}
+
+int CaravanaComercio::move(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
     int targetRow = row, targetCol = col;
     bool flag = false;
@@ -90,7 +102,8 @@ void CaravanaComercio::move(Mapa *mapa) {
         }
 
     consomeAgua();
-    mapa->move(this, targetRow, targetCol);
+    int res = mapa->move(this, targetRow, targetCol);
+    return res;
 }
 
 
@@ -122,11 +135,13 @@ void CaravanaComercio::consomeAgua() {
 }
 
 
-void CaravanaComercio::lastMoves(Mapa *mapa) {
+int CaravanaComercio::lastMoves(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
+    setComportamento(true);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 3);
+    int res;
 
     while (true) {
         int direction = dis(gen);
@@ -139,11 +154,12 @@ void CaravanaComercio::lastMoves(Mapa *mapa) {
         }
         if (mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Deserto ||
             mapa->getMapa()[newRow][newCol].getTipo() == Localizacoes::Cidade) {
-                mapa->move(this, newRow, newCol);
+                res = mapa->move(this, newRow, newCol);
                 break;
             }
     }
     this->setDeathCount(this->getDeathCount() - 1);
+    return res;
 }
 
 void CaravanaComercio::efeitoTempestade() {

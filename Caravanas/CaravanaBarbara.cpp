@@ -4,21 +4,37 @@
 
 #include "CaravanaBarbara.h"
 #include <random>
+#include <sstream>
 #include <iostream>
 #include "../Mapa/Mapa.h"
 using namespace std;
 
-CaravanaBarbara::CaravanaBarbara(const int lifetime): Caravana('!', 40, 0, 0, true, lifetime, 50, Tipos::Barbara, 1) {
+CaravanaBarbara::CaravanaBarbara(const int lifetime): Caravana('\0', 40, 0, 0, true, lifetime, 40, Tipos::Barbara, 1) {
 
 }
 
+CaravanaBarbara::CaravanaBarbara(const CaravanaBarbara &outro) = default;
 
+CaravanaBarbara &CaravanaBarbara::operator=(const CaravanaBarbara &outro) {
+    if (this == &outro)
+        return *this;
+
+    Caravana::operator=(outro);
+    return *this;
+}
 CaravanaBarbara *CaravanaBarbara::duplica() const {
     return new CaravanaBarbara(*this);
 }
 
+std::string CaravanaBarbara::getInfo() const {
+    ostringstream oss;
+    oss << "Caravana Barbara '" << this->getId() << "'\n" << Caravana::getInfo();
+    return oss.str();
+}
 
-void CaravanaBarbara::move(Mapa *mapa) {
+
+
+int CaravanaBarbara::move(Mapa *mapa) {
     auto[row, col] = this->getCoordenadas(mapa);
     int targetRow = row, targetCol = col;
     bool found = false;
@@ -44,7 +60,7 @@ void CaravanaBarbara::move(Mapa *mapa) {
     if (abs(targetCol - col) > 1)
         targetCol = col + (targetCol > col ? 1 : -1);
 
-    // If a non-barbarian caravan is found, move one position towards it
+    // se nao encontrar caravana, ou a posicao escolhida for invalida, escolhe aleatoria
     if (!found || (mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Deserto &&
                     mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Cidade)) {
         std::random_device rd;
@@ -53,26 +69,26 @@ void CaravanaBarbara::move(Mapa *mapa) {
 
         do {
             switch (dis(gen)) {
-                case 0: targetCol = (col + 1) % mapa->getCols(); break; // Right
-                case 1: targetCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // Left
-                case 2: targetRow = (row + 1) % mapa->getRows(); break; // Down
-                case 3: targetRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // Up
+                case 0: targetCol = (col + 1) % mapa->getCols(); break; // dir
+                case 1: targetCol = (col - 1 + mapa->getCols()) % mapa->getCols(); break; // esq
+                case 2: targetRow = (row + 1) % mapa->getRows(); break; // baixo
+                case 3: targetRow = (row - 1 + mapa->getRows()) % mapa->getRows(); break; // cima
             }
         } while (mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Deserto &&
                  mapa->getMapa()[targetRow][targetCol].getTipo() != Localizacoes::Cidade);
     }
 
-    // Perform necessary checks
-    mapa->move(this, targetRow, targetCol);
+    int res = mapa->move(this, targetRow, targetCol);
     this->setDeathCount(this->getDeathCount() - 1);
+    return res;
 }
 
 void CaravanaBarbara::consomeAgua() {
 
 }
 
-void CaravanaBarbara::lastMoves(Mapa *mapa) {
-
+int CaravanaBarbara::lastMoves(Mapa *mapa) {
+    return 0;
 }
 
 
