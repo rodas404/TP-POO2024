@@ -378,11 +378,11 @@ bool Mapa::tempestade(const int row, const int col, const int r) const {
     if (row < 0 || row >= nRows || col < 0 || col >= nCols || r < 0)
         return false;
 
-    // Limita os deslocamentos ao tamanho do mapa
-    int minRow = max(-r, -row);         // Não ultrapassa o topo do mapa
-    int maxRow = min(r, nRows - row - 1); // Não ultrapassa o final do mapa
-    int minCol = max(-r, -col);         // Não ultrapassa a primeira coluna
-    int maxCol = min(r, nCols - col - 1); // Não ultrapassa a última coluna
+    // limitar os deslocamentos para nao passar o mapa
+    int minRow = max(-r, -row);
+    int maxRow = min(r, nRows - row - 1);
+    int minCol = max(-r, -col);
+    int maxCol = min(r, nCols - col - 1);
 
     for (int i = minRow; i <= maxRow; ++i) {
         for (int j = minCol; j <= maxCol; ++j) {
