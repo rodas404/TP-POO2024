@@ -4,7 +4,7 @@
 
 #include "PacoteSuspenso.h"
 #include <sstream>
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 using namespace std;
 
 PacoteSuspenso::PacoteSuspenso(const int lifetime): Item(lifetime){}

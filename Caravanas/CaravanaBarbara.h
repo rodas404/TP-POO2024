@@ -4,7 +4,7 @@
 
 #ifndef CARAVANABARBARA_H
 #define CARAVANABARBARA_H
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 
 
 class CaravanaBarbara: public Caravana{

@@ -5,7 +5,7 @@
 #include "ArcaTesouro.h"
 #include <sstream>
 #include <string>
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 using namespace std;
 
 ArcaTesouro::ArcaTesouro(const int lifetime): Item(lifetime){}

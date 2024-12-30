@@ -4,7 +4,7 @@
 
 #ifndef CAIXAPANDORA_H
 #define CAIXAPANDORA_H
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Item.h"
 
 
 class CaixaPandora: public Item{

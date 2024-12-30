@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="projeto"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="projeto">
+				<Option output="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/projeto.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 projeto"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="projeto/fast">
+				<Option output="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/projeto.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 projeto/fast"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/PROGRA~1/JETBRA~1/CLION2~1.3/bin/mingw/bin/mingw32-make.exe -f &quot;C:/Users/footr/Downloads/TP-POO2024/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Buffer/Buffer.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Buffer/Buffer.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Buffer/Cursor.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Buffer/Cursor.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaBarbara.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaBarbara.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaComercio.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaComercio.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaMilitar.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaMilitar.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaSecreta.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Caravanas/CaravanaSecreta.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/ArcaTesouro.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/ArcaTesouro.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/CaixaPandora.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/CaixaPandora.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/Jaula.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/Jaula.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/Mina.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/Mina.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/PacoteSuspenso.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Itens/PacoteSuspenso.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Caravana.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Caravana.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Cidade.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Cidade.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Item.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Localizacoes/Item.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Mapa/Celula.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Mapa/Celula.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Mapa/Mapa.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Mapa/Mapa.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Simulador/Simulador.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/Simulador/Simulador.h">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/main.cpp">
+			<Option target="projeto"/>
+		</Unit>
+		<Unit filename="C:/Users/footr/Downloads/TP-POO2024/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -4,7 +4,7 @@
 
 #include "Mina.h"
 #include <sstream>
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 using namespace std;
 
 Mina::Mina(const int lifetime): Item(lifetime){}

@@ -163,7 +163,7 @@ int CaravanaMilitar::lastMoves(Mapa *mapa) {
     }
 
     int res = mapa->move(this, newRow, newCol);
-    this->setDeathCount(this->getDeathCount() - 1);
+    --(*this);
     return res;
 }
 

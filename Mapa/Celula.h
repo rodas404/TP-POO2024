@@ -4,11 +4,11 @@
 
 #ifndef CELULA_H
 #define CELULA_H
-#include "../Localizações/Cidade.h"
-#include "../Localizações/Item.h"
+#include "../Localizacoes//Cidade.h"
+#include "../Localizacoes/Item.h"
 #include <memory>
 
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 
 enum class Localizacoes {
     Deserto,

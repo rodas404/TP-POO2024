@@ -79,7 +79,7 @@ int CaravanaBarbara::move(Mapa *mapa) {
     }
 
     int res = mapa->move(this, targetRow, targetCol);
-    this->setDeathCount(this->getDeathCount() - 1);
+    --(*this);
     return res;
 }
 

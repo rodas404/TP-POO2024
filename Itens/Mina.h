@@ -4,7 +4,7 @@
 
 #ifndef MINA_H
 #define MINA_H
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Item.h"
 
 
 class Mina: public Item{

@@ -4,7 +4,7 @@
 
 #ifndef ARCATESOURO_H
 #define ARCATESOURO_H
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Item.h"
 
 
 class ArcaTesouro: public Item{

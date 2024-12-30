@@ -4,7 +4,7 @@
 
 #ifndef PACOTESUSPENSO_H
 #define PACOTESUSPENSO_H
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Item.h"
 
 
 class PacoteSuspenso: public Item{

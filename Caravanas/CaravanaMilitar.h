@@ -4,7 +4,7 @@
 
 #ifndef CARAVANAMILITAR_H
 #define CARAVANAMILITAR_H
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 
 
 class CaravanaMilitar: public Caravana{

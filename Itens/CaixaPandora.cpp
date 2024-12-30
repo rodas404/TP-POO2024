@@ -3,7 +3,7 @@
 //
 
 #include "CaixaPandora.h"
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 #include <sstream>
 using namespace std;
 

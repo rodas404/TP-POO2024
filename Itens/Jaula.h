@@ -4,7 +4,7 @@
 
 #ifndef JAULA_H
 #define JAULA_H
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Item.h"
 
 
 class Jaula: public Item{

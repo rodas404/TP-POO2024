@@ -120,7 +120,7 @@ int CaravanaSecreta::move(Mapa *mapa) {
 
 int CaravanaSecreta::lastMoves(Mapa *mapa) {
     setComportamento(true);
-    this->setDeathCount(this->getDeathCount() - 1);
+    --(*this);
     return 0;
 }
 

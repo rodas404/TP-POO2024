@@ -158,7 +158,7 @@ int CaravanaComercio::lastMoves(Mapa *mapa) {
                 break;
             }
     }
-    this->setDeathCount(this->getDeathCount() - 1);
+    --(*this);
     return res;
 }
 

@@ -5,9 +5,9 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 #include "Cursor.h"
-#include "../Localizações/Caravana.h"
-#include "../Localizações/Cidade.h"
-#include "../Localizações/Item.h"
+#include "../Localizacoes/Caravana.h"
+#include "../Localizacoes/Cidade.h"
+#include "../Localizacoes/Item.h"
 using namespace std;
 
 class Buffer {

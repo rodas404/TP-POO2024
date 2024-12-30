@@ -4,7 +4,7 @@
 
 #include "Jaula.h"
 #include <sstream>
-#include "../Localizações/Caravana.h"
+#include "../Localizacoes/Caravana.h"
 using namespace std;
 
 Jaula::Jaula(const int lifetime): Item(lifetime){}

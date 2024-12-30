@@ -6,15 +6,14 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <map>
 #include <random>
 #include <array>
 #include <set>
 #include "Simulador.h"
 #include "../Mapa/Mapa.h"
 #include "../Buffer/Buffer.h"
-#include "../Localizações/Caravana.h"
-#include "../Localizações/Cidade.h"
+#include "../Localizacoes/Caravana.h"
+#include "../Localizacoes/Cidade.h"
 #include "../Caravanas/CaravanaComercio.h"
 #include "../Caravanas/CaravanaMilitar.h"
 #include "../Caravanas/CaravanaBarbara.h"
@@ -270,7 +269,7 @@ void Simulador::executeInstant() {
                         int res = car->lastMoves(this->getMapa());
                         if (res != -1) setItensApanhados(getItensApanhados()+res);
                     }
-                    else if (car->getComportamento() == true && car->getTipo() != Tipos::Barbara)
+                    else if (car->getComportamento() && car->getTipo() != Tipos::Barbara)
                         for (int i=0; i<car->getNMoves(); ++i) {
                             int res = car->move(this->getMapa());
                             if (res != -1) setItensApanhados(getItensApanhados() + res);
@@ -424,12 +423,12 @@ int Simulador::readCommand(const string& line) {
             cout << "Erro: Nao foi encontrada a caravana '" << ch1 << "'.\n";
             return false;
         }
-        if (car->getComportamento() == true) {
+        if (car->getComportamento()) {
             cout << "Erro: A caravana '" << car->getId() << "' nao aceita instrucoes. Desative primeiro o seu comportamento aleatorio.\n";
             return false;
         }
         if (!manageMoves(car->getId(),car->getNMoves())) {
-            cout << "Erro: A caravana '" << car->getId() << "' atingiu o numero maximo de movimentos este turno.\n";
+            cout << "Erro: A caravana '" << car->getId() << "' atingiu o numero maximo de movimentos para este turno.\n";
             return false;
         }
         if (car->getTripulantes() == 0) {
