@@ -22,6 +22,7 @@ enum class Localizacoes {
 class Celula {
 public:
     Celula(Localizacoes t = Localizacoes::Deserto);
+    ~Celula();
     void setCelula();
     void setCelula(Cidade *c);
     void setCelula(Item *i);

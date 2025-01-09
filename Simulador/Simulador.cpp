@@ -25,6 +25,11 @@ Simulador::Simulador() : mapa_(nullptr), instantes_itens(0), lifetime_itens(0), 
 
 Simulador::Simulador(const Simulador &outro):mapa_(outro.mapa_),instantes_itens(outro.instantes_itens), lifetime_itens(outro.lifetime_itens), max_itens(outro.max_itens), instantes_barbaros(outro.instantes_barbaros), barbaros_lifetime(outro.barbaros_lifetime), buffers(outro.buffers), running(outro.running), turnRunning(outro.turnRunning), currentInstant(outro.currentInstant), nItensApanhados(outro.nItensApanhados), nVitorias(outro.nVitorias) {
 }
+
+Simulador::~Simulador() {
+    delete mapa_;
+}
+
 Simulador &Simulador::operator=(const Simulador &outro) {
     if (this == &outro)
         return *this;

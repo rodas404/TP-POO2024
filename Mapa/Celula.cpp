@@ -9,6 +9,12 @@ using namespace std;
 Celula::Celula(const Localizacoes t): tipo(t), cidade_(nullptr), caravana_(nullptr), item_(nullptr)  {
 }
 
+Celula::~Celula() {
+    delete cidade_;
+    delete caravana_;
+    delete item_;
+}
+
 void Celula::setCelula() {
     setTipo(Localizacoes::Deserto);
 }

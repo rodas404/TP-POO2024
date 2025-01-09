@@ -14,6 +14,7 @@ class Simulador {
 public:
     Simulador();
     Simulador(const Simulador &outro);
+    ~Simulador();
     Simulador &operator=(const Simulador &outro);
 
     Mapa* getMapa() const;

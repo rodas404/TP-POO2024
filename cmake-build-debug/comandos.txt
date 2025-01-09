@@ -1,0 +1,3 @@
+move 1 b
+precos
+comprac c s
